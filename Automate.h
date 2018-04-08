@@ -1,6 +1,5 @@
 #ifndef AUTOMATE_H_INCLUDED
 #define AUTOMATE_H_INCLUDED
-#include <vector>
 
 class Automate
 {
