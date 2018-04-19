@@ -1,15 +1,25 @@
 #ifndef AUTOMATE_H_INCLUDED
 #define AUTOMATE_H_INCLUDED
 #include <vector>
+#include "Etat.h"
 
 class Automate
 {
+
+
     private:
         // Directement dérivé du cours : définition d'un automate
+        size_t nb_symboles;
+        size_t nb_etats;
         std::vector<Etat*> etats;
+        size_t nb_etatsInitiaux;
         std::vector<Etat*> etatsInitiaux;
+        size_t nb_etatsTerminaux;
         std::vector<Etat*> etatsTerminaux;
-        std::vector<std::tuple<Etat*, Lettre, Etat*>> transitions; // OU : encapsuler les transitions en définissant une classe Transition
+        std::vector<tr_t*> transitions;
+        // Fonctions lectures de fichier
+        tr_t* lire_transition(std::string str);
+        tr_t* lire_grp_etats(std::string str);
 
     public:
         // Constructeur prend en paramètre le fichier contenant les données de l'automate à construire
