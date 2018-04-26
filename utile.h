@@ -1,4 +1,4 @@
 #include<string>
-#include<tuple>
+#include<vector>
 
-std::tuple<int,int,int> string_to_tupple(std::string str);
+std::vector<int> string_to_intvec(std::string str);

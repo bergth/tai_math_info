@@ -16,6 +16,7 @@ class Automate
         std::vector<Etat*> etatsInitiaux;
         size_t nb_etatsTerminaux;
         std::vector<Etat*> etatsTerminaux;
+        size_t nb_transitions;
         std::vector<tr_t*> transitions;
         // Fonctions lectures de fichier
         tr_t* lire_transition(std::string str);
@@ -25,6 +26,8 @@ class Automate
         // Constructeur prend en paramètre le fichier contenant les données de l'automate à construire
         Automate(const char* file);
         ~Automate();
+        void afficher_etats();
+        void afficher_transitions();
 };
 
 #endif // AUTOMATE_H_INCLUDED

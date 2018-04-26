@@ -1,33 +1,29 @@
+#include<iostream>
 #include "utile.h"
 
 using namespace std;
 
-std::tuple<int,int,int> string_to_tupple(std::string str)
+vector<int> string_to_intvec(string str)
 {
-    tuple<int,int,int> tup;
-    size_t size_str = str.size();
-
+    vector<int> vec;
     string tmp = "";
-    size_t i = 0;
-    for(; i < size_str && str[i] != ' '; i++)
+    for(size_t i = 0; i < str.size(); i++)
     {
-        tmp += str[i];
+        if(str[i] == ' ')
+        {
+            vec.push_back(stoi(tmp));
+            tmp = "";
+        }
+        else if(str[i] >= '0' && str[i] <= '9')
+        {
+            tmp += str[i];
+        }
+        else
+        {
+            cerr << "Erreur de lecture: pas un nombre\n";
+            exit(1);
+        }
     }
-    get<0>(tup) = stoi(tmp,nullptr,10);
-    i++;
-
-    string tmp = "";
-    for(; i < size_str && str[i] != ' '; i++)
-    {
-        tmp += str[i];
-    }
-    get<1>(tup) = stoi(tmp,nullptr,10);
-    i++;
-
-    string tmp = "";
-    for(; i < size_str && str[i] != ' '; i++)
-    {
-        tmp += str[i];
-    }
-    get<2>(tup) = stoi(tmp,nullptr,10);
+    vec.push_back(stoi(tmp));
+    return vec;
 }

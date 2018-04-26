@@ -3,6 +3,9 @@
 
 #include<vector>
 #include<string>
+
+class Etat;
+
 typedef std::tuple<Etat*, char, Etat*> tr_t;
 
 
@@ -16,5 +19,7 @@ class Etat
         Etat(std::vector<int> _labels): labels(_labels) {}
         
 };
+
+
 
 #endif
