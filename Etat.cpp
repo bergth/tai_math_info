@@ -17,3 +17,23 @@ string Etat::get_label()
     str += "}";
     return str;
 }
+
+void Etat::set_ter(bool _ter)
+{
+    ter = _ter;
+}
+
+void Etat::set_ini(bool _ini)
+{
+    ini = _ini;
+}
+
+void Etat::add_prec(tr_t* _prec)
+{
+    prec.push_back(_prec);
+}
+
+void Etat::add_succ(tr_t* _succ)
+{
+    prec.push_back(_succ);
+}

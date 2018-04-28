@@ -22,7 +22,7 @@ class Automate
         tr_t* lire_transition(std::string str);
         tr_t* lire_grp_etats(std::string str);
         Etat* ajouter_etat(std::vector<int> &labels, bool ini, bool ter);
-        void ajouter_transition(Etat* from, char c, Etat* to);
+        tr_t* ajouter_transition(Etat* from, char c, Etat* to);
 
     public:
         // Constructeur prend en paramètre le fichier contenant les données de l'automate à construire
@@ -30,6 +30,7 @@ class Automate
         ~Automate();
         void afficher_etats();
         void afficher_transitions();
+        std::string to_dot();
 };
 
 #endif // AUTOMATE_H_INCLUDED

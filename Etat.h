@@ -20,6 +20,10 @@ class Etat
     public:
         Etat(std::vector<int> _labels, bool _ini, bool _ter);
         std::string get_label();
+        void add_prec(tr_t* _prec);
+        void add_succ(tr_t* _succ);
+        void set_ter(bool _ter);
+        void set_ini(bool _ini);
         
 };
 
