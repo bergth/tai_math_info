@@ -25,7 +25,7 @@ Automate::Automate(const char* fname)
 
     for(size_t i = 0; i < nb_etats; i++)
     {
-        Etat* tmp = new Etat({(int)i});
+        Etat* tmp = new Etat({(int)i},false,false);
         etats.push_back(tmp);
     }
 
@@ -112,4 +112,11 @@ void Automate::afficher_transitions()
         cout << (get<2>(*transitions[i]))->get_label();
         cout << endl;
     } 
+}
+
+Etat* Automate::ajouter_etat(vector<int> &labels, bool ini, bool ter)
+{
+    Etat* netat = new Etat(labels, ini, ter);
+    etats.push_back(netat);
+    return netat;
 }

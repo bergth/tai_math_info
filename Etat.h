@@ -13,10 +13,13 @@ class Etat
 {
     private:
         std::vector<int> labels;
-        std::vector<tr_t*> acc;
+        bool ini;
+        bool ter;
+        std::vector<tr_t*> prec;
+        std::vector<tr_t*> succ;
     public:
+        Etat(std::vector<int> _labels, bool _ini, bool _ter);
         std::string get_label();
-        Etat(std::vector<int> _labels): labels(_labels) {}
         
 };
 

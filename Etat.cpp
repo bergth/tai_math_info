@@ -1,6 +1,8 @@
 #include "Etat.h"
 using namespace std;
 
+Etat::Etat(vector<int> _labels, bool _ini, bool _ter): labels(_labels), ini(_ini), ter(_ter) {}
+
 string Etat::get_label()
 {
     string str = "{";
@@ -15,5 +17,3 @@ string Etat::get_label()
     str += "}";
     return str;
 }
-
-        
