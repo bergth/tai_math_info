@@ -181,3 +181,39 @@ string Automate::to_dot()
     str += "}\n";
     return str;
 }
+
+void strandardisation()
+{
+    vector<tr_t*>::iterator it;
+    vector<Etat*>::iterator eit;
+    bool tr_vers_entree = false; //si des transitions reviennent vers l'entree
+    bool entree_ter = false; //si au moins une entree est terminale
+    for(eit = etatsInitiaux.begin(); eit != etatsInitiaux.end(); eit++)
+    {
+        if(**eit.init == true) entree_ter = true;
+        for(it = transitions.begin(); it != transitions.end(); it++)
+        {
+            if(get<0>(**it) == (**eit)) tr_vers_entree == false;
+        }
+
+    }
+
+    if(nb_etatsInitiaux > 1 || tr_entree == true) // condition pour non-standardise
+    {
+        if(entree_ter == true) // Si l'automate reconnait le mot vide
+            Etat *init = ajouter_etat(, true, true);
+        else Etat *init = ajouter_etat(, true, false);
+
+        for(eit = etatsInitiaux.begin(); eit != etatsInitiaux.end(); eit++)
+        {
+            **eit.init = false;
+
+            //Il faut relier le nouvel etat initial aux anciens. Je ne sais pas comment faire.
+        }
+
+        etatsInitiaux.erase(etatsInitiaux.begin(), etatsInitiaux.end());
+        etatInitiaux[0] = *init;
+
+
+    }
+}
