@@ -34,7 +34,11 @@
 		</Compiler>
 		<Unit filename="Automate.cpp" />
 		<Unit filename="Automate.h" />
+		<Unit filename="Etat.cpp" />
+		<Unit filename="Etat.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="utile.cpp" />
+		<Unit filename="utile.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

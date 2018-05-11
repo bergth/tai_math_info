@@ -40,7 +40,7 @@ Automate::Automate(const char* fname)
         etats[val]->set_ini(true);
         etatsInitiaux.push_back(etats[val]);
     }
-    
+
     // lecture etats finaux
     getline(file,line);
     read = string_to_intvec(line);
@@ -115,7 +115,7 @@ void Automate::afficher_transitions()
         cout << get<1>(*transitions[i]) << " -> ";
         cout << (get<2>(*transitions[i]))->get_label();
         cout << endl;
-    } 
+    }
 }
 
 Etat* Automate::ajouter_etat(vector<int> &labels, bool ini, bool ter)
@@ -181,7 +181,7 @@ string Automate::to_dot()
     str += "}\n";
     return str;
 }
-
+/*
 void strandardisation()
 {
     vector<tr_t*>::iterator it;
@@ -217,3 +217,4 @@ void strandardisation()
 
     }
 }
+*/
