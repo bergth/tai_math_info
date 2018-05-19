@@ -1,7 +1,7 @@
 #ifndef AUTOMATE_H_INCLUDED
 #define AUTOMATE_H_INCLUDED
 #include <vector>
-#include "Etat.h"
+#include "A5_etat.h"
 
 class Automate
 {

@@ -1,8 +1,8 @@
 #include <fstream>
 #include <iostream>
 #include<cstdlib>
-#include "Automate.h"
-#include "utile.h"
+#include "A5_automate.h"
+#include "A5_utile.h"
 
 using namespace std;
 

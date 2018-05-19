@@ -1,4 +1,4 @@
-#include "Etat.h"
+#include "A5_etat.h"
 using namespace std;
 
 Etat::Etat(vector<int> _labels, bool _ini, bool _ter): labels(_labels), ini(_ini), ter(_ter) {}

@@ -32,13 +32,13 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="../A5_automate.cpp" />
-		<Unit filename="../A5_automate.h" />
-		<Unit filename="../A5_etat.cpp" />
-		<Unit filename="../A5_etat.h" />
-		<Unit filename="../A5_main.cpp" />
-		<Unit filename="../A5_utile.cpp" />
-		<Unit filename="../A5_utile.h" />
+		<Unit filename="A5_automate.cpp" />
+		<Unit filename="A5_automate.h" />
+		<Unit filename="A5_etat.cpp" />
+		<Unit filename="A5_etat.h" />
+		<Unit filename="A5_main.cpp" />
+		<Unit filename="A5_utile.cpp" />
+		<Unit filename="A5_utile.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
