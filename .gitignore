@@ -31,5 +31,9 @@
 *.out
 *.app
 
+# vscode
+.vscode/
 
-.vscode/*
+#code blocks
+bin/
+obj/

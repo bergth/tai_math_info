@@ -1,0 +1,33 @@
+# depslib dependency file v1.0
+1526728909 source:c:\users\vbox\documents\new folder\tai_math_info\a5_automate.cpp
+	<fstream>
+	<iostream>
+	<cstdlib>
+	"A5_automate.h"
+	"A5_utile.h"
+
+1526728576 c:\users\vbox\documents\new folder\tai_math_info\a5_automate.h
+	<vector>
+	"A5_etat.h"
+
+1526728544 c:\users\vbox\documents\new folder\tai_math_info\a5_etat.h
+	<vector>
+	<string>
+	"A5_utile.h"
+
+1526725506 c:\users\vbox\documents\new folder\tai_math_info\a5_utile.h
+	<string>
+	<vector>
+
+1526728538 source:c:\users\vbox\documents\new folder\tai_math_info\a5_etat.cpp
+	"A5_etat.h"
+
+1526728600 source:c:\users\vbox\documents\new folder\tai_math_info\a5_main.cpp
+	<iostream>
+	"A5_automate.h"
+
+1526729068 source:c:\users\vbox\documents\new folder\tai_math_info\a5_utile.cpp
+	<iostream>
+	<cstdlib>
+	"A5_utile.h"
+

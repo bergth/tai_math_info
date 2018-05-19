@@ -1,6 +1,6 @@
 #include <fstream>
 #include <iostream>
-#include <tuple>
+#include<cstdlib>
 #include "Automate.h"
 #include "utile.h"
 
@@ -19,13 +19,15 @@ Automate::Automate(const char* fname)
     string line;
     // lecture symboles et etats
     getline(file,line);
-    nb_symboles = stoi(line,nullptr,10);
+    nb_symboles = stoi(line);
     getline(file,line);
-    nb_etats = stoi(line,nullptr,10);
+    nb_etats = stoi(line);
 
     for(size_t i = 0; i < nb_etats; i++)
     {
-        Etat* tmp = new Etat({(int)i},false,false);
+        vector<int> nvec;
+        nvec.push_back((int)i);
+        Etat* tmp = new Etat(nvec,false,false);
         etats.push_back(tmp);
     }
 
@@ -58,8 +60,8 @@ Automate::Automate(const char* fname)
     for(size_t j = 0; j < nb_transitions; j++)
     {
         // lecture transitions
-        Etat* from = nullptr;
-        Etat* to = nullptr;
+        Etat* from = 0;
+        Etat* to = 0;
         char c = 0;
         string tmp = "";
         getline(file,line);
@@ -111,9 +113,9 @@ void Automate::afficher_transitions()
     cout << "Nombre de transition: " << nb_transitions << endl;
     for(size_t i = 0; i < nb_transitions; i++)
     {
-        cout << i << ": " << (get<0>(*transitions[i]))->get_label() << " -> ";
-        cout << get<1>(*transitions[i]) << " -> ";
-        cout << (get<2>(*transitions[i]))->get_label();
+        cout << i << ": " << transitions[i]->from->get_label() << " -> ";
+        cout << transitions[i]->tr << " -> ";
+        cout << transitions[i]->to->get_label();
         cout << endl;
     }
 }
@@ -128,9 +130,9 @@ Etat* Automate::ajouter_etat(vector<int> &labels, bool ini, bool ter)
 tr_t* Automate::ajouter_transition(Etat* from, char c, Etat* to)
 {
     tr_t* tmp_tr = new tr_t;
-    get<0>(*tmp_tr) = from;
-    get<1>(*tmp_tr) = c;
-    get<2>(*tmp_tr) = to;
+    tmp_tr->from = from;
+    tmp_tr->tr = c;
+    tmp_tr->to = to;
     from->add_prec(tmp_tr);
     to->add_succ(tmp_tr);
     transitions.push_back(tmp_tr);
@@ -145,9 +147,9 @@ string Automate::to_dot()
     string trans = "";
     for(it = transitions.begin(); it != transitions.end(); it++)
     {
-        string name_from = get<0>(**it)->get_label();
-        char c = get<1>(**it);
-        string name_to = get<2>(**it)->get_label();
+        string name_from = (*it)->from->get_label();
+        char c = (*it)->tr;
+        string name_to = (*it)->to->get_label();
         string line = "    \"";
         line += name_from;
         line += "\" -> \"";

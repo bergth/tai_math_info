@@ -3,10 +3,19 @@
 
 #include<vector>
 #include<string>
+#include "utile.h"
 
 class Etat;
 
-typedef std::tuple<Etat*, char, Etat*> tr_t;
+struct tr_t
+{
+    Etat* from;
+    char tr;
+    Etat* to;
+};
+
+
+typedef struct tr_t tr_t;
 
 
 class Etat
@@ -24,7 +33,7 @@ class Etat
         void add_succ(tr_t* _succ);
         void set_ter(bool _ter);
         void set_ini(bool _ini);
-        
+
 };
 
 
