@@ -19,9 +19,9 @@ Automate::Automate(const char* fname)
     string line;
     // lecture symboles et etats
     getline(file,line);
-    nb_symboles = stoi(line);
+    nb_symboles = u_stoi(line);
     getline(file,line);
-    nb_etats = stoi(line);
+    nb_etats = u_stoi(line);
 
     for(size_t i = 0; i < nb_etats; i++)
     {
@@ -33,7 +33,7 @@ Automate::Automate(const char* fname)
 
     // lecture etats initiaux
     getline(file,line);
-    vector<int> read = string_to_intvec(line);
+    vector<int> read = u_string_to_intvec(line);
     nb_etatsInitiaux = read[0];
     int val;
     for(size_t i = 1; i < nb_etatsInitiaux + 1; i++)
@@ -45,7 +45,7 @@ Automate::Automate(const char* fname)
 
     // lecture etats finaux
     getline(file,line);
-    read = string_to_intvec(line);
+    read = u_string_to_intvec(line);
     nb_etatsTerminaux = read[0];
     for(size_t i = 1; i < nb_etatsTerminaux + 1; i++)
     {
@@ -56,7 +56,7 @@ Automate::Automate(const char* fname)
 
     // lecture nombre de transitions
     getline(file,line);
-    nb_transitions = stoi(line);
+    nb_transitions = u_stoi(line);
     for(size_t j = 0; j < nb_transitions; j++)
     {
         // lecture transitions
@@ -71,7 +71,7 @@ Automate::Automate(const char* fname)
             tmp += line[i];
             i++;
         }
-        from = etats[stoi(tmp)];
+        from = etats[u_stoi(tmp)];
         c = line[i];
         if(i < line.size())
             i++;
@@ -81,7 +81,7 @@ Automate::Automate(const char* fname)
             tmp += line[i];
             i++;
         }
-        to = etats[stoi(tmp)];
+        to = etats[u_stoi(tmp)];
         ajouter_transition(from,c,to);
     }
 }
@@ -164,16 +164,16 @@ string Automate::to_dot()
     int i = 0;
     for(eit = etatsInitiaux.begin(); eit != etatsInitiaux.end(); eit++)
     {
-        init  +=    "    node [shape = point, color = white, fontcolor = white]; start" + to_string(i) + ";\n";
-        trans +=    "    start" + to_string(i) + " -> \"" + (*eit)->get_label() + "\";\n";
+        init  +=    "    node [shape = point, color = white, fontcolor = white]; start" + u_to_string(i) + ";\n";
+        trans +=    "    start" + u_to_string(i) + " -> \"" + (*eit)->get_label() + "\";\n";
         i++;
     }
 
     i = 0;
     for(eit = etatsTerminaux.begin(); eit != etatsTerminaux.end(); eit++)
     {
-        init  +=    "    node [shape = point, color = white, fontcolor = white]; end" + to_string(i) + ";\n";
-        trans +=    "   \"" + (*eit)->get_label() + "\" ->  end" + to_string(i) + " ;\n";
+        init  +=    "    node [shape = point, color = white, fontcolor = white]; end" + u_to_string(i) + ";\n";
+        trans +=    "   \"" + (*eit)->get_label() + "\" ->  end" + u_to_string(i) + " ;\n";
         i++;
     }
 

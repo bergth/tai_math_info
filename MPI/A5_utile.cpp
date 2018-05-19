@@ -4,7 +4,7 @@
 
 using namespace std;
 
-vector<int> string_to_intvec(string str)
+vector<int> u_string_to_intvec(string str)
 {
     vector<int> vec;
     string tmp = "";
@@ -12,7 +12,7 @@ vector<int> string_to_intvec(string str)
     {
         if(str[i] == ' ')
         {
-            vec.push_back(stoi(tmp));
+            vec.push_back(u_stoi(tmp));
             tmp = "";
         }
         else if(str[i] >= '0' && str[i] <= '9')
@@ -25,12 +25,16 @@ vector<int> string_to_intvec(string str)
             exit(1);
         }
     }
-    vec.push_back(stoi(tmp));
+    vec.push_back(u_stoi(tmp));
     return vec;
 }
 
-std::string to_string(int val)
+std::string u_to_string(int val)
 {
+    if(val == 0)
+    {
+        return "0";
+    }
     string tmp = "";
     while(val != 0)
     {
@@ -45,7 +49,7 @@ std::string to_string(int val)
     return res;
 }
 
-int stoi(const std::string& str)
+int u_stoi(const std::string& str)
 {
     int res = 0;
     for(size_t i = 0; i < str.size(); i++)
