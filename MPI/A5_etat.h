@@ -7,15 +7,19 @@
 
 class Etat;
 
-struct tr_t
+class Trs
 {
-    Etat* from;
-    char tr;
-    Etat* to;
+    public:
+        Etat* from;
+        char tr;
+        Etat* to;
+        int operator==(const Trs& right) const;
+        int operator!=(const Trs& right) const;
+        int operator<(const Trs& right) const;
+        int operator<=(const Trs& right) const;
+        int operator>(const Trs& right) const;
+        int operator>=(const Trs& right) const;
 };
-
-
-typedef struct tr_t tr_t;
 
 
 class Etat
@@ -24,16 +28,18 @@ class Etat
         std::vector<int> labels;
         bool ini;
         bool ter;
-        std::vector<tr_t*> prec;
-        std::vector<tr_t*> succ;
+        std::vector<Trs*> prec;
+        std::vector<Trs*> succ;
     public:
         Etat(std::vector<int> _labels, bool _ini, bool _ter);
         std::string get_label();
-        void add_prec(tr_t* _prec);
-        void add_succ(tr_t* _succ);
+        std::vector<int> get_vect_label();
+        void afficher_etat();
+        void add_prec(Trs* _prec);
+        void add_succ(Trs* _succ);
         void set_ter(bool _ter);
         void set_ini(bool _ini);
-
+        
 };
 
 

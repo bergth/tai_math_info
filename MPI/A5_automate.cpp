@@ -127,21 +127,24 @@ Etat* Automate::ajouter_etat(vector<int> &labels, bool ini, bool ter)
     return netat;
 }
 
-tr_t* Automate::ajouter_transition(Etat* from, char c, Etat* to)
+Trs* Automate::ajouter_transition(Etat* from, char c, Etat* to)
 {
-    tr_t* tmp_tr = new tr_t;
+    Trs* tmp_tr = new Trs;
     tmp_tr->from = from;
     tmp_tr->tr = c;
     tmp_tr->to = to;
     from->add_prec(tmp_tr);
     to->add_succ(tmp_tr);
+
+
+
     transitions.push_back(tmp_tr);
     return tmp_tr;
 }
 
 string Automate::to_dot()
 {
-    vector<tr_t*>::iterator it;
+    vector<Trs*>::iterator it;
     string str = "digraph G {\n";
     string init = "";
     string trans = "";
@@ -186,7 +189,7 @@ string Automate::to_dot()
 /*
 void strandardisation()
 {
-    vector<tr_t*>::iterator it;
+    vector<Trs*>::iterator it;
     vector<Etat*>::iterator eit;
     bool tr_vers_entree = false; //si des transitions reviennent vers l'entree
     bool entree_ter = false; //si au moins une entree est terminale
