@@ -7,6 +7,6 @@ int main()
     Automate A("A5_exemple.txt");
     A.afficher_etats();
     A.afficher_transitions();
-    cout << A.to_dot();
+    A.afficher_table();
     return 0;
 }

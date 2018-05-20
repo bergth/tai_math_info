@@ -30,7 +30,9 @@ class Automate
         ~Automate();
         void afficher_etats();
         void afficher_transitions();
+        void afficher_table() const;
         std::string to_dot();
+        void sort();
 };
 
 #endif // AUTOMATE_H_INCLUDED

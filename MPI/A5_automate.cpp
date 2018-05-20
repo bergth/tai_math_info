@@ -85,7 +85,7 @@ Automate::Automate(const char* fname)
         to = etats[u_stoi(tmp)];
         ajouter_transition(from,c,to);
     }
-   sort(transitions.begin(),transitions.end(),compare_trs_pt);
+   Automate::sort();
 }
 
 Automate::~Automate()
@@ -115,10 +115,16 @@ void Automate::afficher_transitions()
     cout << "Nombre de transition: " << nb_transitions << endl;
     for(size_t i = 0; i < nb_transitions; i++)
     {
-        cout << i << ": " << transitions[i]->from->get_label() << " -> ";
-        cout << transitions[i]->tr << " -> ";
-        cout << transitions[i]->to->get_label();
-        cout << endl;
+        cout << i << ": ";
+        transitions[i]->afficher();
+    }
+}
+
+void Automate::afficher_table() const
+{
+    for(size_t i = 0; i < nb_etats; i++)
+    {
+        etats[i]->afficher_etat();
     }
 }
 
@@ -135,10 +141,8 @@ Trs* Automate::ajouter_transition(Etat* from, char c, Etat* to)
     tmp_tr->from = from;
     tmp_tr->tr = c;
     tmp_tr->to = to;
-    from->add_prec(tmp_tr);
-    to->add_succ(tmp_tr);
-
-
+    to->add_prec(tmp_tr);
+    from->add_succ(tmp_tr);
 
     transitions.push_back(tmp_tr);
     return tmp_tr;
@@ -188,6 +192,17 @@ string Automate::to_dot()
     str += "}\n";
     return str;
 }
+
+void Automate::sort()
+{
+    for(size_t i = 0; i < etats.size(); i++)
+    {
+        etats[i]->sort();
+    }
+    std::sort(transitions.begin(),transitions.end(),compare_trs_pt);
+    std::sort(etats.begin(),etats.end(),compare_etat_pt);
+}
+
 /*
 void strandardisation()
 {

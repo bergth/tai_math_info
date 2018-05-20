@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include "A5_etat.h"
 using namespace std;
 
@@ -65,9 +66,28 @@ int compare_trs_pt(const Trs* a, const Trs* b)
     return *a < *b;
 }
 
+void Trs::afficher() const
+{
+        cout << from->get_label() << " -> ";
+        cout << tr << " -> ";
+        cout << to->get_label();
+        cout << endl;
+}
+
 Etat::Etat(vector<int> _labels, bool _ini, bool _ter): labels(_labels), ini(_ini), ter(_ter) {}
 
-string Etat::get_label()
+
+int Etat::operator<(const Etat& right) const
+{
+    return labels < right.get_vect_label();
+}
+
+int compare_etat_pt(const Etat* a, const Etat* b)
+{
+    return *a < *b;
+}
+
+string Etat::get_label() const
 {
     string str = "{";
     for(size_t i = 0; i < labels.size(); i++)
@@ -82,7 +102,7 @@ string Etat::get_label()
     return str;
 }
 
-void Etat::afficher_etat()
+void Etat::afficher_etat() const
 {
     cout << "[" << get_label() << "]-----------" << endl;
     if(ini)
@@ -94,6 +114,13 @@ void Etat::afficher_etat()
         cout << "T";
     else
         cout << " ";
+    cout << endl;
+    cout << "Transitions: " << endl;
+    for(size_t i = 0; i < succ.size(); i++)
+    {
+        cout << "   - ";
+        succ[i]->afficher();
+    }
     cout << endl;
 }
 
@@ -114,10 +141,16 @@ void Etat::add_prec(Trs* _prec)
 
 void Etat::add_succ(Trs* _succ)
 {
-    prec.push_back(_succ);
+    succ.push_back(_succ);
 }
 
-vector<int> Etat::get_vect_label()
+vector<int> Etat::get_vect_label() const
 {
     return labels;
+}
+
+void Etat::sort()
+{
+    std::sort(succ.begin(),succ.end(),compare_trs_pt);
+    std::sort(prec.begin(),prec.end(),compare_trs_pt);
 }
