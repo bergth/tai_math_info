@@ -2,6 +2,7 @@
 #include <iostream>
 #include<cstdlib>
 #include<algorithm>
+#include<queue>
 #include "A5_automate.h"
 #include "A5_utile.h"
 
@@ -88,6 +89,31 @@ Automate::Automate(const char* fname)
    Automate::sort();
 }
 
+Automate::Automate(size_t _nb_symboles, std::vector<Etat*> _etats, std::vector<Trs*> _trs)
+{
+    nb_symboles = _nb_symboles;
+    nb_etats = _etats.size();
+    etats = _etats;
+    nb_transitions = _trs.size();
+    transitions = _trs;
+
+
+    for(size_t i = 0; i < _etats.size(); i++)
+    {
+        if(_etats[i]->get_ini())
+        {
+            etatsInitiaux.push_back(_etats[i]);
+            nb_etatsInitiaux++;
+        }
+        if(_etats[i]->get_ter())
+        {
+            etatsTerminaux.push_back(_etats[i]);
+            nb_etatsTerminaux++;
+        }
+    }
+    Automate::sort();
+}
+
 Automate::~Automate()
 {
     for(size_t i = 0; i < etats.size(); i++)
@@ -137,10 +163,7 @@ Etat* Automate::ajouter_etat(vector<int> &labels, bool ini, bool ter)
 
 Trs* Automate::ajouter_transition(Etat* from, char c, Etat* to)
 {
-    Trs* tmp_tr = new Trs;
-    tmp_tr->from = from;
-    tmp_tr->tr = c;
-    tmp_tr->to = to;
+    Trs* tmp_tr = new Trs(from,c,to);
     to->add_prec(tmp_tr);
     from->add_succ(tmp_tr);
 
@@ -202,6 +225,54 @@ void Automate::sort()
     std::sort(transitions.begin(),transitions.end(),compare_trs_pt);
     std::sort(etats.begin(),etats.end(),compare_etat_pt);
 }
+
+
+Automate Automate::determiniser() const
+{
+    vector<Etat*> netats;
+    queue<Etat*> q;
+    vector<Trs*> ntrs;
+    Etat* net = contact_name_etat(etatsInitiaux);
+    if(net)
+    {
+        Etat* curr;
+        Etat* tmp;
+        netats.push_back(net);
+        q.push(net);
+        while(!q.empty())
+        {
+            curr = q.front();
+            if(!curr)
+            {
+                cerr << "Erreur pop" << endl;
+                exit(1);
+            }
+            q.pop();
+            for(size_t i = 0; i < nb_symboles; i++)
+            {
+                net = get_transitions(curr, 'a' + i);
+                if(net)
+                {
+                    tmp = find_etat(netats, net);
+                    if(tmp)
+                    {
+                        net = tmp;
+                    }
+                    else
+                    {
+                        netats.push_back(net);
+                    }
+                    Trs* trs_tmp = new Trs(curr,'a' + i, net);
+                    ntrs.push_back(trs_tmp);
+                    curr->add_succ(trs_tmp);
+                    net->add_prec(trs_tmp);
+                }
+            }
+        }
+    }
+    return Automate(nb_symboles,netats,ntrs);
+}
+
 
 /*
 void strandardisation()

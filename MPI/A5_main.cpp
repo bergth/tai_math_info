@@ -8,5 +8,10 @@ int main()
     A.afficher_etats();
     A.afficher_transitions();
     A.afficher_table();
+    
+    cout << "BEGIN DETERMINISATION" << endl;
+    Automate B = A.determiniser();
+    B.afficher_table();
     return 0;
+
 }

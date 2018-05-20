@@ -1,4 +1,4 @@
-CXXC=g++ -fsanitize=address
+CXXC=g++ -g -fsanitize=address
 CXXFLAGS= -std=c++98 -W -Wall -Wextra -Werror -Wfatal-errors #-Weffc++
 LDFLAGS=
 EXEC=main

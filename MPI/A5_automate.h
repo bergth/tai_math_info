@@ -27,12 +27,14 @@ class Automate
     public:
         // Constructeur prend en paramètre le fichier contenant les données de l'automate à construire
         Automate(const char* file);
+        Automate(size_t _nb_symboles, std::vector<Etat*> _etats, std::vector<Trs*> _trs);
         ~Automate();
         void afficher_etats();
         void afficher_transitions();
         void afficher_table() const;
         std::string to_dot();
         void sort();
+        Automate determiniser() const;
 };
 
 #endif // AUTOMATE_H_INCLUDED
