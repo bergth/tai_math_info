@@ -250,16 +250,20 @@ Automate Automate::determiniser() const
             q.pop();
             for(size_t i = 0; i < nb_symboles; i++)
             {
-                net = get_transitions(curr, 'a' + i);
+                //cout << "deter: " << curr->get_label() << ": "  << (char)('a' + i) << endl;
+                net = get_old_transitions(curr, 'a' + i);
                 if(net)
                 {
+                    cout << "net: " << net->get_label() << endl;
                     tmp = find_etat(netats, net);
                     if(tmp)
                     {
+                        delete net;
                         net = tmp;
                     }
                     else
                     {
+                        q.push(net);
                         netats.push_back(net);
                     }
                     Trs* trs_tmp = new Trs(curr,'a' + i, net);

@@ -30,6 +30,7 @@ class Etat
 {
     private:
         std::vector<int> labels;
+        std::vector<Etat*> old;
         bool ini;
         bool ter;
         std::vector<Trs*> prec;
@@ -43,6 +44,8 @@ class Etat
         void afficher_etat() const;
         void add_prec(Trs* _prec);
         void add_succ(Trs* _succ);
+        void set_old(std::vector<Etat*> ets);
+        std::vector<Etat*> get_old() const;
         std::vector<Trs*> get_succ() const;
         void set_ter(bool _ter);
         void set_ini(bool _ini);
@@ -54,7 +57,7 @@ class Etat
 
 int compare_etat_pt(const Etat* a, const Etat* b);
 Etat* contact_name_etat(std::vector<Etat*> ets);
-Etat* get_transitions(const Etat* et, char c);
+Etat* get_old_transitions(const Etat* et, char c);
 Etat* find_etat(const std::vector<Etat*>& ets, Etat* et);
 
 #endif

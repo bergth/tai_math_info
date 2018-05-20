@@ -167,6 +167,7 @@ void Etat::add_succ(Trs* _succ)
     succ.push_back(_succ);
 }
 
+
 vector<int> Etat::get_vect_label() const
 {
     return labels;
@@ -181,6 +182,17 @@ void Etat::sort()
 std::vector<Trs*> Etat::get_succ() const
 {
     return succ;
+}
+
+void Etat::set_old(std::vector<Etat*> ets)
+{
+    old = ets;
+}
+
+
+std::vector<Etat*> Etat::get_old() const
+{
+    return old;
 }
 
 
@@ -214,21 +226,25 @@ Etat* contact_name_etat(vector<Etat*> ets)
     if(labels.size() == 0)
         return NULL;
     Etat* res = new Etat(labels,ini,ter);
-
+    res->set_old(ets);
 
     return res;
 }
 
-Etat* get_transitions(const Etat* et, char c)
+Etat* get_old_transitions(const Etat* et, char c)
 {
     vector<Etat*> net;
-    vector<Trs*> succ = et->get_succ();
-    for(size_t i = 0; i < succ.size(); i++)
+    vector<Etat*> old = et->get_old();
+    for(size_t j = 0; j < old.size(); j++)
     {
-        if(succ[i]->tr == c)
-            net.push_back(succ[i]->to);
+        vector<Trs*> succ = old[j]->get_succ();
+        for(size_t i = 0; i < succ.size(); i++)
+        {
+            if(succ[i]->tr == c)
+                net.push_back(succ[i]->to);
+        }
+        cout << "get_tr: " << net.size() << endl;
     }
-
     return contact_name_etat(net);
 }
 
