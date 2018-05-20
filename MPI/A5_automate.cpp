@@ -24,22 +24,25 @@ Automate::Automate(const char* fname)
     nb_symboles = u_stoi(line);
     getline(file,line);
     nb_etats = u_stoi(line);
-
+    cout << "nombre etat:" << nb_etats << endl;
     for(size_t i = 0; i < nb_etats; i++)
     {
         vector<int> nvec;
-        nvec.push_back((int)i);
+        nvec.push_back((int)(i));
         Etat* tmp = new Etat(nvec,false,false);
         etats.push_back(tmp);
     }
 
     // lecture etats initiaux
     getline(file,line);
+    cout << line << endl;
     vector<int> read = u_string_to_intvec(line);
     nb_etatsInitiaux = read[0];
     int val;
+    cout << "read: " << read.size() << endl;
     for(size_t i = 1; i < nb_etatsInitiaux + 1; i++)
     {
+        cout << i << endl;
         val = read[i];
         etats[val]->set_ini(true);
         etatsInitiaux.push_back(etats[val]);
@@ -47,13 +50,14 @@ Automate::Automate(const char* fname)
 
     // lecture etats finaux
     getline(file,line);
+    cout << line << endl;
     read = u_string_to_intvec(line);
     nb_etatsTerminaux = read[0];
     for(size_t i = 1; i < nb_etatsTerminaux + 1; i++)
     {
         val = read[i];
         etats[val]->set_ter(true);
-        etatsTerminaux.push_back(etats[val]);
+        etatsTerminaux.push_back(etats[val - 1]);
     }
 
     // lecture nombre de transitions
@@ -68,21 +72,29 @@ Automate::Automate(const char* fname)
         string tmp = "";
         getline(file,line);
         size_t i = 0;
+        while(line[i] == ' ')
+            i++;
         while(i < line.size() && line[i] >= '0' && line[i] <= '9')
         {
             tmp += line[i];
             i++;
         }
         from = etats[u_stoi(tmp)];
+        while(line[i] == ' ')
+            i++;
         c = line[i];
         if(i < line.size())
             i++;
         tmp = "";
+        while(line[i] == ' ')
+            i++;
         while(i < line.size() && line[i] >= '0' && line[i] <= '9')
         {
             tmp += line[i];
             i++;
         }
+        cout << line << endl;
+        cout << "[" <<tmp << "]" << endl;
         to = etats[u_stoi(tmp)];
         ajouter_transition(from,c,to);
     }

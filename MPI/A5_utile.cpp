@@ -10,8 +10,9 @@ vector<int> u_string_to_intvec(string str)
     string tmp = "";
     for(size_t i = 0; i < str.size(); i++)
     {
-        if(str[i] == ' ')
+        if(str[i] == ' ' && tmp != "")
         {
+            cout << "tmp: " << tmp;
             vec.push_back(u_stoi(tmp));
             tmp = "";
         }
@@ -25,7 +26,8 @@ vector<int> u_string_to_intvec(string str)
             exit(1);
         }
     }
-    vec.push_back(u_stoi(tmp));
+    if(tmp != "")
+        vec.push_back(u_stoi(tmp));
     return vec;
 }
 
@@ -51,6 +53,12 @@ std::string u_to_string(int val)
 
 int u_stoi(const std::string& str)
 {
+    cout << "[" << str << "]" << endl;
+    if(str == "")
+    {
+        cerr << "stoi: empty string" << endl;
+        exit(1);
+    }
     int res = 0;
     for(size_t i = 0; i < str.size(); i++)
     {
