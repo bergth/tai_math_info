@@ -25,13 +25,21 @@ int Trs::operator<(const Trs& right) const
     {
         return true;
     }
-    if(tr < right.tr)
+    else if(from->get_vect_label() == right.from->get_vect_label())
     {
-        return true;
-    }
-    if(to->get_vect_label() < right.to->get_vect_label())
-    {
-        return true;
+        if(tr < right.tr)
+        {
+            return true;
+        }
+        else if(tr == right.tr)
+        {
+            if(to->get_vect_label() < right.to->get_vect_label())
+            {
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
     return false;
 }
@@ -52,6 +60,10 @@ int Trs::operator>=(const Trs& right) const
     return !(*this < right);
 }
 
+int compare_trs_pt(const Trs* a, const Trs* b)
+{
+    return *a < *b;
+}
 
 Etat::Etat(vector<int> _labels, bool _ini, bool _ter): labels(_labels), ini(_ini), ter(_ter) {}
 

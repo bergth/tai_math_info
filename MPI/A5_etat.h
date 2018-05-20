@@ -21,6 +21,8 @@ class Trs
         int operator>=(const Trs& right) const;
 };
 
+int compare_trs_pt(const Trs* a, const Trs* b);
+
 
 class Etat
 {

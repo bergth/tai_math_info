@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include<cstdlib>
+#include<algorithm>
 #include "A5_automate.h"
 #include "A5_utile.h"
 
@@ -84,6 +85,7 @@ Automate::Automate(const char* fname)
         to = etats[u_stoi(tmp)];
         ajouter_transition(from,c,to);
     }
+   sort(transitions.begin(),transitions.end(),compare_trs_pt);
 }
 
 Automate::~Automate()
