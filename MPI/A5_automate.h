@@ -34,6 +34,8 @@ class Automate
         void afficher_table() const;
         std::string to_dot();
         void sort();
+        bool est_synchrone() const;
+        bool est_deterministe() const;
         Automate determiniser() const;
 };
 

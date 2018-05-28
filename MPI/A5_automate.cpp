@@ -57,7 +57,7 @@ Automate::Automate(const char* fname)
     {
         val = read[i];
         etats[val]->set_ter(true);
-        etatsTerminaux.push_back(etats[val - 1]);
+        etatsTerminaux.push_back(etats[val]);
     }
 
     // lecture nombre de transitions
@@ -238,6 +238,30 @@ void Automate::sort()
     std::sort(etats.begin(),etats.end(),compare_etat_pt);
 }
 
+bool Automate::est_synchrone() const
+{
+    for(size_t i = 0; i < nb_transitions; i++)
+    {
+        if(transitions[i]->tr == '*')
+            return false;
+    }
+    return true;
+}
+
+bool Automate::est_deterministe() const
+{
+    if(transitions[0]->tr == '*')
+            return false;
+    for(size_t i = 1; i < nb_transitions; i++)
+    {
+        if(transitions[i]->tr == '*')
+            return false;
+        if(transitions[i]->from == transitions[i-1]->from && 
+            transitions[i]->tr == transitions[i-1]->tr)
+            return false;
+    }
+    return true;
+}
 
 Automate Automate::determiniser() const
 {
@@ -288,6 +312,7 @@ Automate Automate::determiniser() const
     }
     return Automate(nb_symboles,netats,ntrs);
 }
+
 
 
 /*
