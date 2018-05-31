@@ -266,9 +266,14 @@ bool Automate::est_deterministe() const
 Automate Automate::determiniser() const
 {
     vector<Etat*> netats;
+    vector<int> nvec;
+    nvec.push_back(-1);
+    Etat* puit = new Etat(nvec,false,false);
+    netats.push_back(puit);
     queue<Etat*> q;
     vector<Trs*> ntrs;
     Etat* net = contact_name_etat(etatsInitiaux);
+    net->set_ini(true);
     if(net)
     {
         Etat* curr;
@@ -286,11 +291,9 @@ Automate Automate::determiniser() const
             q.pop();
             for(size_t i = 0; i < nb_symboles; i++)
             {
-                //cout << "deter: " << curr->get_label() << ": "  << (char)('a' + i) << endl;
                 net = get_old_transitions(curr, 'a' + i);
                 if(net)
                 {
-                    cout << "net: " << net->get_label() << endl;
                     tmp = find_etat(netats, net);
                     if(tmp)
                     {
@@ -302,17 +305,135 @@ Automate Automate::determiniser() const
                         q.push(net);
                         netats.push_back(net);
                     }
-                    Trs* trs_tmp = new Trs(curr,'a' + i, net);
-                    ntrs.push_back(trs_tmp);
-                    curr->add_succ(trs_tmp);
-                    net->add_prec(trs_tmp);
                 }
+                else
+                {
+                    net = puit;
+                }
+                Trs* trs_tmp = new Trs(curr,'a' + i, net);
+                ntrs.push_back(trs_tmp);
+                curr->add_succ(trs_tmp);
+                net->add_prec(trs_tmp);
             }
         }
     }
     return Automate(nb_symboles,netats,ntrs);
 }
 
+bool Automate::est_complet() const
+{
+    if(nb_transitions == 0)
+        return false;
+    char c = 'a';
+    Etat* curr = transitions[0]->from;
+    for(size_t i = 0; i < nb_transitions; i++)
+    {
+        if(transitions[i]->from == curr)
+        {
+            if(transitions[i]->tr != c)
+                return false;
+            c++;
+        }
+        else
+        {
+            curr = transitions[i]->from;
+            if(c - 'a' != (int)nb_symboles)
+                return false;
+            if(transitions[i]->tr != 'a')
+                return false;
+            c = 'b';
+        }
+    }
+    return true;
+}
+
+Automate Automate::completer() const
+{
+    vector<Etat*> netats;
+    vector<Trs*> ntrs;
+    vector<Trs*> tmp;
+    vector<int> nvec;
+    nvec.push_back(-1);
+    Etat* puit = new Etat(nvec,false,false);
+    netats.push_back(puit);
+    for(size_t i = 0; i < nb_symboles; i++)
+    {
+        Trs* tmp = new Trs(puit,'a'+i,puit);
+        ntrs.push_back(tmp);
+        puit->add_prec(tmp);
+        puit->add_succ(tmp);
+    }
+    for(size_t i = 0; i < etats.size(); i++)
+    {
+        char c = 'a';
+        Etat* from = find_etat(netats,etats[i]);
+        if(!from)
+        {
+            from = new Etat(etats[i]->get_vect_label(),etats[i]->get_ini(),etats[i]->get_ter());
+            netats.push_back(from);
+        }
+        tmp = etats[i]->get_succ();
+        size_t j = 0;
+        char ctmp = 0;
+        while(c < (char)('a' + nb_symboles))
+        {
+            Etat* to;
+            if(j >= tmp.size() || c != tmp[j]->tr)
+            {
+                ctmp = c;
+                to = puit;
+            }
+            else
+            {
+                ctmp = tmp[j]->tr;
+                to = find_etat(netats,tmp[j]->to);
+                if(!to)
+                {
+                    to = new Etat(tmp[j]->to->get_vect_label(),tmp[j]->to->get_ini(),tmp[j]->to->get_ter());
+                    netats.push_back(to);
+                }
+                j++;
+            }
+            c++;
+            Trs* newtrs = new Trs(from,ctmp,to);
+            ntrs.push_back(newtrs);
+            from->add_succ(newtrs);
+            to->add_prec(newtrs);
+        }
+    }
+    return Automate(nb_symboles,netats,ntrs);
+}
+
+bool Automate::reconnaitre_mot(string mot)
+{
+    if(!est_deterministe())
+    {
+        cout << "Cet automate n'est pas déterministe" << endl;
+        return false;
+    }
+    Etat* curr = etatsInitiaux[0];
+    for(size_t i = 0; i < mot.size(); i++)
+    {
+        vector<Trs *> tr_tmp = curr->get_succ();
+        curr = NULL;
+        for(size_t j = 0; j < tr_tmp.size(); j++)
+        {
+            if(tr_tmp[j]->tr == mot[i])
+            {
+                curr = tr_tmp[j]->to;
+            }
+        }
+        if(curr == NULL)
+        {
+            return false;
+        }
+    }
+    if(curr->get_ter())
+    {
+        return true;
+    }
+    return false;
+}
 
 
 /*

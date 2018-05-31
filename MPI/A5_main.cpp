@@ -5,16 +5,15 @@ using namespace std;
 int main()
 {
     Automate A("A5_16.txt");
-  //  A.afficher_etats();
-    //A.afficher_transitions();
-  // A.afficher_table();
     cout << A.to_dot();
     cout << "BEGIN DETERMINISATION" << endl;
     Automate B = A.determiniser();
-    //B.afficher_table();
     cout << B.to_dot() << endl;
-    cout << A.est_deterministe() << endl;
-    cout << B.est_deterministe() << endl;
+    //cout << "BEGIN COMPLETION" << endl;
+    //Automate C = B.completer();
+    //cout << C.to_dot() << endl;
+    cout << B.est_complet() << endl;
+    //cout << C.est_complet() << endl;
+    //cout << B.reconnaitre_mot("bbbccd") << endl;
     return 0;
-
 }

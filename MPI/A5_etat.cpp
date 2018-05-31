@@ -105,7 +105,14 @@ string Etat::get_label() const
     string str = "{";
     for(size_t i = 0; i < labels.size(); i++)
     {
-        str += u_to_string(labels[i]);
+        if(labels[i] == -1)
+        {
+            str += 'P';
+        }
+        else
+        {
+            str += u_to_string(labels[i]);
+        }
         if(i + 1 != labels.size())
         {
             str += ", ";
@@ -215,10 +222,6 @@ Etat* contact_name_etat(vector<Etat*> ets)
             }
             if(ets[i]->get_ter())
                 ter = true;
-            if(ets[i]->get_ini())
-            {
-                ini = true;
-            }
         }
     }
     std::sort(labels.begin(),labels.end());
@@ -243,7 +246,6 @@ Etat* get_old_transitions(const Etat* et, char c)
             if(succ[i]->tr == c)
                 net.push_back(succ[i]->to);
         }
-        cout << "get_tr: " << net.size() << endl;
     }
     return contact_name_etat(net);
 }
@@ -259,3 +261,4 @@ Etat* find_etat(const vector<Etat*>& ets, Etat* et)
         }
         return NULL;
 }
+

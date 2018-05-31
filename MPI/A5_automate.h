@@ -37,6 +37,10 @@ class Automate
         bool est_synchrone() const;
         bool est_deterministe() const;
         Automate determiniser() const;
+        bool est_complet() const;
+        Automate completer() const;
+        bool reconnaitre_mot(std::string mot);
+
 };
 
 #endif // AUTOMATE_H_INCLUDED
