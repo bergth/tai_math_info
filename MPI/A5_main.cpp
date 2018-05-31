@@ -4,16 +4,16 @@ using namespace std;
 
 int main()
 {
-    Automate A("A5_18.txt");
+    Automate A("A5_31.txt");
     cout << "##############" << endl;
     A.afficher_table();
     cout << "##############" << endl;
     cout << A.to_dot() << endl;
-    /*cout << "BEGIN DETERMINISATION" << endl;
+    /*cout << "BEGIN DETERMINISATION" << endl;*/
     Automate B = A.determiniser(true);
-    Automate C = B.determiniser(false);
+    //Automate C = B.determiniser(false);
     cout << B.to_dot() << endl;
-    cout << C.to_dot() << endl;
+    //cout << C.to_dot() << endl;
     //Automate B = A.determiniser();
     //cout << B.to_dot() << endl;
     //cout << "BEGIN COMPLETION" << endl;
@@ -22,5 +22,5 @@ int main()
     //cout << B.est_complet() << endl;
     //cout << C.est_complet() << endl;
     //cout << B.reconnaitre_mot("bbbccd") << endl;
-    return 0;*/
+    //return 0;
 }
