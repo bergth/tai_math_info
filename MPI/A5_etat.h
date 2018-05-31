@@ -57,7 +57,8 @@ class Etat
 
 int compare_etat_pt(const Etat* a, const Etat* b);
 Etat* contact_name_etat(std::vector<Etat*> ets);
-Etat* get_old_transitions(const Etat* et, char c);
+std::vector<Etat*> get_old_transitions(const Etat* et, char c);
 Etat* find_etat(const std::vector<Etat*>& ets, Etat* et);
+Etat* epsilon_cloture(std::vector<Etat*> et);
 
 #endif

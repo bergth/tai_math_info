@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <queue>
 #include "A5_etat.h"
 using namespace std;
 
@@ -202,6 +203,36 @@ std::vector<Etat*> Etat::get_old() const
     return old;
 }
 
+Etat* epsilon_cloture(vector<Etat*> et)
+{
+    vector<Etat*> find;
+    queue<Etat*> q;
+    vector<Trs*> tr;
+    for(size_t i = 0; i < et.size(); i++)
+    {
+        q.push(et[i]);
+        find.push_back(et[i]);
+    }
+    while(!q.empty())
+    {
+        tr = q.front()->get_succ();
+        q.pop();
+        for(size_t i = 0; i < tr.size(); i++)
+        {
+            if(tr[i]->tr == '*')
+            {
+                Etat* to = tr[i]->to;
+                if(!find_etat(find,to))
+                {
+                    find.push_back(to);
+                    q.push(to);
+                }
+            }
+        }
+    }
+    return contact_name_etat(find);
+}
+
 
 Etat* contact_name_etat(vector<Etat*> ets)
 {
@@ -234,7 +265,7 @@ Etat* contact_name_etat(vector<Etat*> ets)
     return res;
 }
 
-Etat* get_old_transitions(const Etat* et, char c)
+vector<Etat*> get_old_transitions(const Etat* et, char c)
 {
     vector<Etat*> net;
     vector<Etat*> old = et->get_old();
@@ -247,7 +278,7 @@ Etat* get_old_transitions(const Etat* et, char c)
                 net.push_back(succ[i]->to);
         }
     }
-    return contact_name_etat(net);
+    return net;
 }
 
 Etat* find_etat(const vector<Etat*>& ets, Etat* et)

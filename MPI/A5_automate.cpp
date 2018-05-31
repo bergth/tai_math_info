@@ -240,6 +240,8 @@ void Automate::sort()
 
 bool Automate::est_synchrone() const
 {
+    // On cherche simplement si une transition à comme charactère '*'.
+    // À partir de là on est sur que l'automate n'est pas synchrone.
     for(size_t i = 0; i < nb_transitions; i++)
     {
         if(transitions[i]->tr == '*')
@@ -250,12 +252,17 @@ bool Automate::est_synchrone() const
 
 bool Automate::est_deterministe() const
 {
+    // on teste la transition 0 à part pour le cas asynchrone
+    // car notre boucle commence à 1
     if(transitions[0]->tr == '*')
             return false;
     for(size_t i = 1; i < nb_transitions; i++)
     {
+        // Si l'automate est asynchrone, il n'est pas déterministe.
         if(transitions[i]->tr == '*')
             return false;
+        // Les transitions sont triées. Il suffit donc juste de savoir si la transition 
+        // suivante est identique à la courante
         if(transitions[i]->from == transitions[i-1]->from && 
             transitions[i]->tr == transitions[i-1]->tr)
             return false;
@@ -263,23 +270,39 @@ bool Automate::est_deterministe() const
     return true;
 }
 
-Automate Automate::determiniser() const
+Automate Automate::determiniser(bool asynchrone) const
 {
+    // Le vecteur contenant les nouveaux états
     vector<Etat*> netats;
+    // on place un état puit (avec le nom '-1')
     vector<int> nvec;
     nvec.push_back(-1);
     Etat* puit = new Etat(nvec,false,false);
     netats.push_back(puit);
+    // Cette file est utilisée pour la déterminisation
+    // elle permet d'ajouter dans une sorte de file d'attente
+    // les états à trouver.
     queue<Etat*> q;
+    // Vecteur contenant les nouvelles transitions
     vector<Trs*> ntrs;
-    Etat* net = contact_name_etat(etatsInitiaux);
+    // On créé le premier état initial composé des états initiaux de l'ancien automate
+    Etat* net;
+    if(asynchrone)
+    {
+        net = epsilon_cloture(etatsInitiaux);
+    }
+    else
+    {
+        net = contact_name_etat(etatsInitiaux);
+    }
     net->set_ini(true);
     if(net)
     {
-        Etat* curr;
-        Etat* tmp;
+        Etat* curr;  // utilisé pour récupérer la tête de file
+        Etat* tmp; // utilisé pour trouver un état
         netats.push_back(net);
-        q.push(net);
+        q.push(net); // on met le premier élément dans la file
+        // tant que la file n'est pas vide, on continu
         while(!q.empty())
         {
             curr = q.front();
@@ -289,59 +312,80 @@ Automate Automate::determiniser() const
                 exit(1);
             }
             q.pop();
+            // on test toutes les transitions pour l'état courant
             for(size_t i = 0; i < nb_symboles; i++)
             {
-                net = get_old_transitions(curr, 'a' + i);
-                if(net)
+                if(asynchrone)
                 {
-                    tmp = find_etat(netats, net);
-                    if(tmp)
+                    net = epsilon_cloture(get_old_transitions(curr, 'a' + i));
+                }
+                else
+                {
+                    net = contact_name_etat(get_old_transitions(curr, 'a' + i)); // on récupère les transitions via le charactère 'a' + i partant de curr
+                }
+                if(net) // si on en trouve
+                {
+                    tmp = find_etat(netats, net); // on regarde si l'état a déjà été mis dans la liste des nouveaux états
+                    if(tmp) // si oui, pas la peine de l'ajouter une deuxiéme fois
                     {
                         delete net;
                         net = tmp;
                     }
-                    else
+                    else // si non, on l'ajoute
                     {
                         q.push(net);
                         netats.push_back(net);
                     }
                 }
-                else
+                else // si on en trouve pas, on dirrige la nouvelle transitions vers le puit.
                 {
                     net = puit;
                 }
+                // On créé une nouvelle transition et on l'ajoute là ou elle doit l'être.
                 Trs* trs_tmp = new Trs(curr,'a' + i, net);
-                ntrs.push_back(trs_tmp);
-                curr->add_succ(trs_tmp);
-                net->add_prec(trs_tmp);
+                ntrs.push_back(trs_tmp); // liste de transition générale
+                curr->add_succ(trs_tmp); // liste des successeur de l'état courant
+                net->add_prec(trs_tmp); // liste des prédécesseur de l'état vers lequel arrive la transition.
             }
         }
     }
     return Automate(nb_symboles,netats,ntrs);
 }
 
+
+
 bool Automate::est_complet() const
 {
+    // si il y a zero transitions, il ne peut être complet.
     if(nb_transitions == 0)
         return false;
+    // on utilise c pour tester si les transitions se suivent bien.
+    // on peut faire celà car les transitions sont triées.
     char c = 'a';
     Etat* curr = transitions[0]->from;
+    // pour toutes les transitions
     for(size_t i = 0; i < nb_transitions; i++)
     {
+        // si on est toujours sur le même état
         if(transitions[i]->from == curr)
         {
+            // si la transitions est != de c, alors il ne peut être complet.
             if(transitions[i]->tr != c)
                 return false;
-            c++;
+            c++; // on incrémente c pour tester la transition suivante
         }
+        // si on est sur un nouvel état
         else
         {
+            // on change l'état courant
             curr = transitions[i]->from;
+            // si c n'a pas passé toutes les transitions, l'automate n'est pas complet
             if(c - 'a' != (int)nb_symboles)
                 return false;
+            // on teste la première transition du nouvel état courant.
             if(transitions[i]->tr != 'a')
                 return false;
-            c = 'b';
+            c = 'b'; // c peut maintenant commencer à b.
         }
     }
     return true;
@@ -349,13 +393,18 @@ bool Automate::est_complet() const
 
 Automate Automate::completer() const
 {
+    // vecteur des nouveaux états
     vector<Etat*> netats;
+    // vecteur des nouvelles transitions
     vector<Trs*> ntrs;
+    // vecteur temporaire pour stocker les transitions partante d'un état
     vector<Trs*> tmp;
+    // création et ajout d'un vecteur puit dans netats
     vector<int> nvec;
     nvec.push_back(-1);
     Etat* puit = new Etat(nvec,false,false);
     netats.push_back(puit);
+    // on ajoute toutes les transitions allant du puit vers le puit
     for(size_t i = 0; i < nb_symboles; i++)
     {
         Trs* tmp = new Trs(puit,'a'+i,puit);
@@ -363,71 +412,85 @@ Automate Automate::completer() const
         puit->add_prec(tmp);
         puit->add_succ(tmp);
     }
+    // pour tous les états de l'automate actuel
     for(size_t i = 0; i < etats.size(); i++)
     {
         char c = 'a';
+        // on regarde si l'état existe ou non
         Etat* from = find_etat(netats,etats[i]);
-        if(!from)
+        if(!from) // si non, on créer un nouvel état "copie" et on l'ajoute dans le vecteur
         {
             from = new Etat(etats[i]->get_vect_label(),etats[i]->get_ini(),etats[i]->get_ter());
             netats.push_back(from);
         }
-        tmp = etats[i]->get_succ();
+        tmp = etats[i]->get_succ(); // on récupère les transitions vers les successeurs
         size_t j = 0;
-        char ctmp = 0;
-        while(c < (char)('a' + nb_symboles))
+        char ctmp = 0;  
+        while(c < (char)('a' + nb_symboles)) // on passe sur toutes les transitions
         {
             Etat* to;
-            if(j >= tmp.size() || c != tmp[j]->tr)
+            // si on est pas déjà passé sur toutes les transitions et que c est différent de la transitions courante
+            // c'est à dire, si nous sommes sur une transition qui n'existe pas
+            if(j >= tmp.size() || c != tmp[j]->tr) 
             {
-                ctmp = c;
-                to = puit;
+                ctmp = c; // la transition vaut c
+                to = puit; // la destination de la transition est le puit.
             }
             else
             {
-                ctmp = tmp[j]->tr;
-                to = find_etat(netats,tmp[j]->to);
-                if(!to)
+                ctmp = tmp[j]->tr; // la transition vaux celle de la transition courante
+                to = find_etat(netats,tmp[j]->to); // on cherche l'état de la destination de la transition
+                if(!to) // si il n'existe pas dans le vecteur, on le créé et on l'ajoute
                 {
                     to = new Etat(tmp[j]->to->get_vect_label(),tmp[j]->to->get_ini(),tmp[j]->to->get_ter());
                     netats.push_back(to);
                 }
-                j++;
+                j++; // on a passé une transition, on incrémente j.
             }
-            c++;
+            c++; // on incrémente c pour tester la prochaine transition
+            // on créé la transition et on l'ajoute là ou il faut
             Trs* newtrs = new Trs(from,ctmp,to);
             ntrs.push_back(newtrs);
             from->add_succ(newtrs);
             to->add_prec(newtrs);
         }
     }
+    // on créé un nouvel automate à partir du vecteur de nouveaux états et de nouvelles transitions
     return Automate(nb_symboles,netats,ntrs);
 }
 
 bool Automate::reconnaitre_mot(string mot)
 {
+    // Si l'automate n'est pas déterministe, on ne peut pas tester le mot facilement sans transformation.
     if(!est_deterministe())
     {
         cout << "Cet automate n'est pas déterministe" << endl;
         return false;
     }
+    // On se place sur le seul état initial (car déterministe)
     Etat* curr = etatsInitiaux[0];
+    // on parcours tout le mot
     for(size_t i = 0; i < mot.size(); i++)
     {
+        // on récupère les transitions de l'état courant
         vector<Trs *> tr_tmp = curr->get_succ();
         curr = NULL;
         for(size_t j = 0; j < tr_tmp.size(); j++)
         {
+            // si une transition correspond à la lettre de notre mot
             if(tr_tmp[j]->tr == mot[i])
             {
+                // on se place sur la destination de cette transition
                 curr = tr_tmp[j]->to;
             }
         }
+        // si on a pas trouvé de transition correspondant à la lettre courante, le mot n'est pas reconnu
         if(curr == NULL)
         {
             return false;
         }
     }
+    // nous avons parcouru tout notre mot, on regarde si l'état sur lequel on est est terminal. 
     if(curr->get_ter())
     {
         return true;
