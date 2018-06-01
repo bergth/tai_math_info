@@ -35,11 +35,13 @@ class Automate
         void sort();
         bool est_synchrone() const;
         bool est_deterministe() const;
-        Automate determiniser(bool asynchrone) const;
-        Automate determiniser_asynchrone() const;
+        Automate* determinisation_completion() const;
+        Automate* determiniser(bool asynchrone) const;
+        Automate* determiniser_asynchrone() const;
         bool est_complet() const;
-        Automate completer() const;
+        Automate* completer() const;
         bool reconnaitre_mot(std::string mot);
+        Automate* copier() const;
 
 };
 

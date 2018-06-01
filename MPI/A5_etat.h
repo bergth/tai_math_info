@@ -39,6 +39,7 @@ class Etat
         int operator<(const Etat& right) const;
         int operator==(const Etat& right) const;
         Etat(std::vector<int> _labels, bool _ini, bool _ter);
+        //~Etat();
         std::string get_label() const;
         std::vector<int> get_vect_label() const;
         void afficher_etat() const;

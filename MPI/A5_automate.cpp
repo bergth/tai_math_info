@@ -91,7 +91,7 @@ Automate::Automate(const char* fname)
         to = etats[u_stoi(tmp)];
         ajouter_transition(from,c,to);
     }
-   Automate::sort();
+   this->sort();
 }
 
 Automate::Automate(size_t _nb_symboles, std::vector<Etat*> _etats, std::vector<Trs*> _trs)
@@ -116,7 +116,7 @@ Automate::Automate(size_t _nb_symboles, std::vector<Etat*> _etats, std::vector<T
             nb_etatsTerminaux++;
         }
     }
-    Automate::sort();
+    this->sort();
 }
 
 Automate::~Automate()
@@ -268,7 +268,34 @@ bool Automate::est_deterministe() const
     return true;
 }
 
-Automate Automate::determiniser(bool asynchrone) const
+Automate* Automate::determinisation_completion() const
+{
+    if(!est_synchrone())
+    {
+        return determiniser(true);
+    }
+    else
+    {
+        if(est_deterministe())
+        {
+            if(est_complet())
+            {
+                return copier();
+            }
+            else
+            {
+                return completer();
+            }
+        }
+        else
+        {
+            return determiniser(false);
+        }
+    }
+}
+
+
+Automate* Automate::determiniser(bool asynchrone) const
 {
     // Le vecteur contenant les nouveaux états
     vector<Etat*> netats;
@@ -283,6 +310,13 @@ Automate Automate::determiniser(bool asynchrone) const
     queue<Etat*> q;
     // Vecteur contenant les nouvelles transitions
     vector<Trs*> ntrs;
+    for(size_t i = 0; i < nb_symboles; i++)
+    {
+        Trs* tmp = new Trs(puit,'a'+i,puit);
+        ntrs.push_back(tmp);
+        puit->add_prec(tmp);
+        puit->add_succ(tmp);
+    }
     // On créé le premier état initial composé des états initiaux de l'ancien automate
     Etat* net;
     if(asynchrone)
@@ -347,7 +381,7 @@ Automate Automate::determiniser(bool asynchrone) const
             }
         }
     }
-    return Automate(nb_symboles,netats,ntrs);
+    return new Automate(nb_symboles,netats,ntrs);
 }
 
 
@@ -377,7 +411,55 @@ bool Automate::est_complet() const
     return true;
 }
 
-Automate Automate::completer() const
+Automate* Automate::copier() const
+{
+    // vecteur des nouveaux états
+    vector<Etat*> netats;
+    // vecteur des nouvelles transitions
+    vector<Trs*> ntrs;
+    // vecteur temporaire pour stocker les transitions partante d'un état
+    vector<Trs*> tmp;
+    // création et ajout d'un vecteur puit dans netats
+    vector<int> nvec;
+ 
+    // pour tous les états de l'automate actuel
+    for(size_t i = 0; i < etats.size(); i++)
+    {
+        // on regarde si l'état existe ou non
+        Etat* from = find_etat(netats,etats[i]);
+        if(!from) // si non, on créer un nouvel état "copie" et on l'ajoute dans le vecteur
+        {
+            from = new Etat(etats[i]->get_vect_label(),etats[i]->get_ini(),etats[i]->get_ter());
+            netats.push_back(from);
+        }
+        tmp = etats[i]->get_succ(); // on récupère les transitions vers les successeurs
+        char ctmp = 0;  
+         // on passe sur toutes les transitions
+        for(size_t j = 0; j < tmp.size(); j++)
+        {
+            Etat* to;
+            // si on est pas déjà passé sur toutes les transitions et que c est différent de la transitions courante
+            // c'est à dire, si nous sommes sur une transition qui n'existe pas
+            ctmp = tmp[j]->tr; // la transition vaux celle de la transition courante
+            to = find_etat(netats,tmp[j]->to); // on cherche l'état de la destination de la transition
+            if(!to) // si il n'existe pas dans le vecteur, on le créé et on l'ajoute
+            {
+                to = new Etat(tmp[j]->to->get_vect_label(),tmp[j]->to->get_ini(),tmp[j]->to->get_ter());
+                netats.push_back(to);
+            }
+            // on créé la transition et on l'ajoute là ou il faut
+            Trs* newtrs = new Trs(from,ctmp,to);
+            ntrs.push_back(newtrs);
+            from->add_succ(newtrs);
+            to->add_prec(newtrs);
+
+        }
+    }
+    // on créé un nouvel automate à partir du vecteur de nouveaux états et de nouvelles transitions
+    return new Automate(nb_symboles,netats,ntrs);
+}
+
+Automate* Automate::completer() const
 {
     // vecteur des nouveaux états
     vector<Etat*> netats;
@@ -442,7 +524,7 @@ Automate Automate::completer() const
         }
     }
     // on créé un nouvel automate à partir du vecteur de nouveaux états et de nouvelles transitions
-    return Automate(nb_symboles,netats,ntrs);
+    return new Automate(nb_symboles,netats,ntrs);
 }
 
 bool Automate::reconnaitre_mot(string mot)
