@@ -101,8 +101,8 @@ Automate::Automate(size_t _nb_symboles, std::vector<Etat*> _etats, std::vector<T
     etats = _etats;
     nb_transitions = _trs.size();
     transitions = _trs;
-
-
+    nb_etatsInitiaux = 0;
+    nb_etatsTerminaux = 0;
     for(size_t i = 0; i < _etats.size(); i++)
     {
         if(_etats[i]->get_ini())
@@ -153,6 +153,12 @@ void Automate::afficher_transitions()
 
 void Automate::afficher_table() const
 {
+    cout << "alphabet: ";
+    for(size_t i = 0; i < nb_symboles; i++)
+    {
+        cout << (char)('a' + i);
+    }
+    cout << endl;
     for(size_t i = 0; i < nb_etats; i++)
     {
         etats[i]->afficher_etat();
@@ -246,24 +252,32 @@ bool Automate::est_synchrone() const
 bool Automate::est_deterministe() const
 {
     if(nb_etatsInitiaux != 1)
+    {
         return false;
+    }
     // on teste la transition 0 à part pour le cas asynchrone
     // car notre boucle commence à 1
     if(nb_transitions == 0 && nb_symboles == 0)
         return true;
     
     if(transitions[0]->tr == '*')
+    {
             return false;
+    }
     for(size_t i = 1; i < nb_transitions; i++)
     {
         // Si l'automate est asynchrone, il n'est pas déterministe.
         if(transitions[i]->tr == '*')
+        {
             return false;
+        }
         // Les transitions sont triées. Il suffit donc juste de savoir si la transition 
         // suivante est identique à la courante
-        if(transitions[i]->from == transitions[i-1]->from && 
+        if(transitions[i]->from->get_vect_label() == transitions[i-1]->from->get_vect_label() && 
             transitions[i]->tr == transitions[i-1]->tr)
-            return false;
+            {
+                return false;
+            }
     }
     return true;
 }

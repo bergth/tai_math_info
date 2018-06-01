@@ -21,21 +21,13 @@ Automate* lire_automate(size_t n)
 int main()
 {
     cout << "BEGIN ##" << endl;
-    /*for(size_t i = 1; i <= 42; i++)
+    for(size_t i = 1; i <= 42; i++)
     {
         Automate* aut = lire_automate(i);
-        cout << i << " aut: " << aut->est_complet() << " d? " << aut->est_deterministe() << endl;
         Automate* B = aut->determinisation_completion();
-        cout << i << " B: " << B->est_complet() << " d? " << B->est_deterministe() << endl;
+        cout << i << ": " << aut->est_complet() << " " << B->est_complet() << endl;
         delete aut;
         delete B;
-    }*/
-    Automate* A = lire_automate(42);
-    cout << A->est_deterministe() << endl;
-    Automate* B = A->determinisation_completion();
-    cout << B->est_deterministe() << endl;
-    delete A;
-    delete B;
-    cout << "END ##" << endl;
+    }
 
 }
