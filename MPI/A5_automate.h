@@ -41,6 +41,7 @@ class Automate
         bool est_complet() const;
         Automate* completer() const;
         bool reconnaitre_mot(std::string mot);
+        void trouver_n_premiers_mots(size_t n, size_t l);
         Automate* copier() const;
 
 };

@@ -546,8 +546,10 @@ bool Automate::reconnaitre_mot(string mot)
     // Si l'automate n'est pas déterministe, on ne peut pas tester le mot facilement sans transformation.
     if(!est_deterministe())
     {
-        cout << "Cet automate n'est pas déterministe" << endl;
-        return false;
+        Automate* B = determinisation_completion();
+        bool res = B->reconnaitre_mot(mot);
+        delete B;
+        return res;
     }
     // On se place sur le seul état initial (car déterministe)
     Etat* curr = etatsInitiaux[0];
@@ -578,6 +580,42 @@ bool Automate::reconnaitre_mot(string mot)
         return true;
     }
     return false;
+}
+
+void Automate::trouver_n_premiers_mots(size_t n, size_t l)
+{
+    vector<string> res;
+    if(reconnaitre_mot(""))
+    {
+        res.push_back("");
+    }
+    queue<string> q;
+    q.push("");
+    while(!q.empty())
+    {
+        string tmp = q.front();
+        if(res.size() == n || tmp.size() == l)
+        {
+            break;
+        }
+        q.pop();
+        for(size_t i = 0; i < nb_symboles; i++)
+        {
+            string tmp2 = tmp + (char)('a' + i);
+            //cout << "d: " << tmp2 << endl;
+            q.push(tmp2);
+            if(reconnaitre_mot(tmp2))
+                res.push_back(tmp2);
+        }
+    }
+    for(size_t i = 0; i < res.size(); i++)
+    {
+        if(res[i] == "")
+            cout << "<e>,";
+        else
+            cout << res[i] + ", ";
+    }
+    cout << endl;
 }
 
 

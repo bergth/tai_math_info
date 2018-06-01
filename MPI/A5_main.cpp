@@ -24,10 +24,17 @@ int main()
     for(size_t i = 1; i <= 42; i++)
     {
         Automate* aut = lire_automate(i);
+        cout << i <<  " : ";
+        aut->trouver_n_premiers_mots(10,6);
         Automate* B = aut->determinisation_completion();
-        cout << i << ": " << aut->est_complet() << " " << B->est_complet() << endl;
         delete aut;
         delete B;
     }
-
+    /*Automate* A = lire_automate(20);
+    Automate* B = A->determinisation_completion();
+    cout << B->to_dot() << endl;
+    B->trouver_n_premiers_mots(10,6);
+    delete A;
+    delete B;*/
 }
+
