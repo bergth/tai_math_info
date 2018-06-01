@@ -4,15 +4,15 @@ using namespace std;
 
 int main()
 {
-    Automate A("A5_31.txt");
+    Automate A("A5_42.txt");
     cout << "##############" << endl;
     A.afficher_table();
     cout << "##############" << endl;
     cout << A.to_dot() << endl;
     /*cout << "BEGIN DETERMINISATION" << endl;*/
-    Automate B = A.determiniser(true);
+    //Automate B = A.determiniser(true);
     //Automate C = B.determiniser(false);
-    cout << B.to_dot() << endl;
+    //cout << B.to_dot() << endl;
     //cout << C.to_dot() << endl;
     //Automate B = A.determiniser();
     //cout << B.to_dot() << endl;
