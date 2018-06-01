@@ -24,7 +24,7 @@ Automate::Automate(const char* fname)
     nb_symboles = u_stoi(line);
     getline(file,line);
     nb_etats = u_stoi(line);
-    cout << "nombre etat:" << nb_etats << endl;
+    //cout << "nombre etat:" << nb_etats << endl;
     for(size_t i = 0; i < nb_etats; i++)
     {
         vector<int> nvec;
@@ -35,14 +35,11 @@ Automate::Automate(const char* fname)
 
     // lecture etats initiaux
     getline(file,line);
-    cout << line << endl;
     vector<int> read = u_string_to_intvec(line);
     nb_etatsInitiaux = read[0];
     int val;
-    cout << "read: " << read.size() << endl;
     for(size_t i = 1; i < nb_etatsInitiaux + 1; i++)
     {
-        cout << i << endl;
         val = read[i];
         etats[val]->set_ini(true);
         etatsInitiaux.push_back(etats[val]);
@@ -50,7 +47,6 @@ Automate::Automate(const char* fname)
 
     // lecture etats finaux
     getline(file,line);
-    cout << line << endl;
     read = u_string_to_intvec(line);
     nb_etatsTerminaux = read[0];
     for(size_t i = 1; i < nb_etatsTerminaux + 1; i++)
@@ -60,7 +56,6 @@ Automate::Automate(const char* fname)
         etatsTerminaux.push_back(etats[val]);
     }
 
-    // lecture nombre de transitions
     getline(file,line);
     nb_transitions = u_stoi(line);
     for(size_t j = 0; j < nb_transitions; j++)
@@ -93,8 +88,6 @@ Automate::Automate(const char* fname)
             tmp += line[i];
             i++;
         }
-        cout << line << endl;
-        cout << "[" <<tmp << "]" << endl;
         to = etats[u_stoi(tmp)];
         ajouter_transition(from,c,to);
     }
@@ -252,8 +245,13 @@ bool Automate::est_synchrone() const
 
 bool Automate::est_deterministe() const
 {
+    if(nb_etatsInitiaux != 1)
+        return false;
     // on teste la transition 0 à part pour le cas asynchrone
     // car notre boucle commence à 1
+    if(nb_transitions == 0 && nb_symboles == 0)
+        return true;
+    
     if(transitions[0]->tr == '*')
             return false;
     for(size_t i = 1; i < nb_transitions; i++)
@@ -356,36 +354,24 @@ Automate Automate::determiniser(bool asynchrone) const
 
 bool Automate::est_complet() const
 {
+    if(nb_etatsInitiaux != 1)
+        return false;
+    if(nb_transitions == 0 && nb_symboles == 0)
+        return true;
     // si il y a zero transitions, il ne peut être complet.
     if(nb_transitions == 0)
         return false;
     // on utilise c pour tester si les transitions se suivent bien.
     // on peut faire celà car les transitions sont triées.
-    char c = 'a';
-    Etat* curr = transitions[0]->from;
-    // pour toutes les transitions
-    for(size_t i = 0; i < nb_transitions; i++)
+    for(size_t i = 0; i < nb_etats; i++)
     {
-        // si on est toujours sur le même état
-        if(transitions[i]->from == curr)
+        vector<Trs*> tmp = etats[i]->get_succ();
+        if(tmp.size() != nb_symboles)
+            return false;
+        for(size_t j = 0; j < tmp.size(); j++)
         {
-            // si la transitions est != de c, alors il ne peut être complet.
-            if(transitions[i]->tr != c)
+            if(tmp[j]->tr != (char)('a' + j))
                 return false;
-            c++; // on incrémente c pour tester la transition suivante
-        }
-        // si on est sur un nouvel état
-        else
-        {
-            // on change l'état courant
-            curr = transitions[i]->from;
-            // si c n'a pas passé toutes les transitions, l'automate n'est pas complet
-            if(c - 'a' != (int)nb_symboles)
-                return false;
-            // on teste la première transition du nouvel état courant.
-            if(transitions[i]->tr != 'a')
-                return false;
-            c = 'b'; // c peut maintenant commencer à b.
         }
     }
     return true;
