@@ -437,9 +437,28 @@ bool Automate::est_Standard() const
 
 }
 
-Automate* Automate::standardiser()
+Automate* Automate::standardiser() const
 {
+    // vecteur des nouveaux états
+    vector<Etat*> netats = etats;
+    // vecteur des nouvelles transitions
+    vector<Trs*> ntrs = transitions;
+    vector<int> nvec;
+    nvec.push_back(-1);
+    Etat* ninit = new Etat(nvec,true,false);
+    netats.push_back(ninit);
+    for(size_t i = 0; i < nb_etatsInitiaux; i++)
+    {
+        for(size_t j = 0; j < etatsInitiaux[i]->get_succ().size(); j++) //Pour toutes les transitions partant des entrees...
+        {
+            Trs* nt = new Trs(ninit, etatsInitiaux[i]->get_succ()[j]->tr, etatsInitiaux[i]); //...On ajoute une transition du meme caractere du nouvel etat inital aux entrees
+            ntrs.push_back(nt);
+        }
+        etatsInitiaux[i]->set_ini(false); //On supprime aux entrees leur statut d'entree
+    }
 
+
+    return new Automate(nb_symboles, netats, ntrs);
 }
 
 Automate* Automate::copier() const
