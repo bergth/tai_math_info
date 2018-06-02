@@ -23,6 +23,7 @@ class Automate
         Trs* lire_grp_etats(std::string str);
         Etat* ajouter_etat(std::vector<int> &labels, bool ini, bool ter);
         Trs* ajouter_transition(Etat* from, char c, Etat* to);
+
     public:
         // Constructeur prend en paramètre le fichier contenant les données de l'automate à construire
         Automate(const char* file);
@@ -45,7 +46,7 @@ class Automate
         bool reconnaitre_mot(std::string mot);
         void trouver_n_premiers_mots(size_t n, size_t l);
         Automate* copier() const;
-
+        void copier_et_trs(std::vector<Etat*> &vect_etats, std::vector<Trs*> &transi) const;
 };
 
 #endif // AUTOMATE_H_INCLUDED

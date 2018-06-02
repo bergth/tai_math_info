@@ -110,6 +110,10 @@ string Etat::get_label() const
         {
             str += 'P';
         }
+        else if(labels[i] == -2)
+        {
+            str += 'I';
+        }
         else
         {
             str += u_to_string(labels[i]);

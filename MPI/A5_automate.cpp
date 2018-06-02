@@ -440,30 +440,39 @@ bool Automate::est_Standard() const
 Automate* Automate::standardiser() const
 {
     // vecteur des nouveaux états
-    vector<Etat*> netats = etats;
+    vector<Etat*> netats;
     // vecteur des nouvelles transitions
-    vector<Trs*> ntrs = transitions;
+    vector<Trs*> ntrs;
+    copier_et_trs(netats,ntrs);
+    vector<Etat*> oldInitiaux;
+    for(size_t i = 0;i < netats.size(); i++)
+    {
+        if(netats[i]->get_ini())
+            oldInitiaux.push_back(netats[i]);
+    }
     vector<int> nvec;
-    nvec.push_back(-1);
+    nvec.push_back(-2);
     Etat* ninit = new Etat(nvec,true,false);
     netats.push_back(ninit);
-    for(size_t i = 0; i < nb_etatsInitiaux; i++)
+    for(size_t i = 0; i < oldInitiaux.size(); i++)
     {
-        for(size_t j = 0; j < etatsInitiaux[i]->get_succ().size(); j++) //Pour toutes les transitions partant des entrees...
-        {
-            Trs* nt = new Trs(ninit, etatsInitiaux[i]->get_succ()[j]->tr, etatsInitiaux[i]); //...On ajoute une transition du meme caractere du nouvel etat inital aux entrees
-            ntrs.push_back(nt);
-        }
-        etatsInitiaux[i]->set_ini(false); //On supprime aux entrees leur statut d'entree
-    }
 
+        for(size_t j = 0; j < oldInitiaux[i]->get_succ().size(); j++) //Pour toutes les transitions partant des entrees...
+        {
+            Trs* nt = new Trs(ninit, oldInitiaux[i]->get_succ()[j]->tr, oldInitiaux[i]->get_succ()[j]->to); //...On ajoute une transition du meme caractere du nouvel etat inital aux entrees
+            ntrs.push_back(nt);
+            ninit->add_succ(nt);
+            oldInitiaux[i]->add_prec(nt);
+        }
+        oldInitiaux[i]->set_ini(false); //On supprime aux entrees leur statut d'entree
+    }
 
     return new Automate(nb_symboles, netats, ntrs);
 }
 
-Automate* Automate::copier() const
+void Automate::copier_et_trs(std::vector<Etat*> &vect_etats, std::vector<Trs*> &transi) const
 {
-    // vecteur des nouveaux états
+        // vecteur des nouveaux états
     vector<Etat*> netats;
     // vecteur des nouvelles transitions
     vector<Trs*> ntrs;
@@ -506,7 +515,17 @@ Automate* Automate::copier() const
         }
     }
     // on créé un nouvel automate à partir du vecteur de nouveaux états et de nouvelles transitions
-    return new Automate(nb_symboles,netats,ntrs);
+    //return new Automate(nb_symboles,netats,ntrs);
+    vect_etats = netats;
+    transi = ntrs;
+}
+
+Automate* Automate::copier() const
+{
+    vector<Etat*> etats;
+    vector<Trs*> transi;
+    copier_et_trs(etats,transi);
+    return new Automate(nb_symboles,etats,transi);
 }
 
 Automate* Automate::completer() const
@@ -655,40 +674,3 @@ void Automate::trouver_n_premiers_mots(size_t n, size_t l)
 }
 
 
-/*
-void strandardisation()
-{
-    vector<Trs*>::iterator it;
-    vector<Etat*>::iterator eit;
-    bool tr_vers_entree = false; //si des transitions reviennent vers l'entree
-    bool entree_ter = false; //si au moins une entree est terminale
-    for(eit = etatsInitiaux.begin(); eit != etatsInitiaux.end(); eit++)
-    {
-        if(**eit.init == true) entree_ter = true;
-        for(it = transitions.begin(); it != transitions.end(); it++)
-        {
-            if(get<0>(**it) == (**eit)) tr_vers_entree == false;
-        }
-
-    }
-
-    if(nb_etatsInitiaux > 1 || tr_entree == true) // condition pour non-standardise
-    {
-        if(entree_ter == true) // Si l'automate reconnait le mot vide
-            Etat *init = ajouter_etat(, true, true);
-        else Etat *init = ajouter_etat(, true, false);
-
-        for(eit = etatsInitiaux.begin(); eit != etatsInitiaux.end(); eit++)
-        {
-            **eit.init = false;
-
-            //Il faut relier le nouvel etat initial aux anciens. Je ne sais pas comment faire.
-        }
-
-        etatsInitiaux.erase(etatsInitiaux.begin(), etatsInitiaux.end());
-        etatInitiaux[0] = *init;
-
-
-    }
-}
-*/
