@@ -259,7 +259,7 @@ bool Automate::est_deterministe() const
     // car notre boucle commence à 1
     if(nb_transitions == 0 && nb_symboles == 0)
         return true;
-    
+
     if(transitions[0]->tr == '*')
     {
             return false;
@@ -271,9 +271,9 @@ bool Automate::est_deterministe() const
         {
             return false;
         }
-        // Les transitions sont triées. Il suffit donc juste de savoir si la transition 
+        // Les transitions sont triées. Il suffit donc juste de savoir si la transition
         // suivante est identique à la courante
-        if(transitions[i]->from->get_vect_label() == transitions[i-1]->from->get_vect_label() && 
+        if(transitions[i]->from->get_vect_label() == transitions[i-1]->from->get_vect_label() &&
             transitions[i]->tr == transitions[i-1]->tr)
             {
                 return false;
@@ -425,6 +425,18 @@ bool Automate::est_complet() const
     return true;
 }
 
+bool Automate::est_Standard() const
+{
+    if(nb_etatsInitiaux != 1)
+        return false;
+    for(size_t i = 0; i < nb_transitions; i++)
+    {
+        if(transitions[i]->to == etatsInitiaux[0])
+            return false;
+    }
+
+}
+
 Automate* Automate::copier() const
 {
     // vecteur des nouveaux états
@@ -435,7 +447,7 @@ Automate* Automate::copier() const
     vector<Trs*> tmp;
     // création et ajout d'un vecteur puit dans netats
     vector<int> nvec;
- 
+
     // pour tous les états de l'automate actuel
     for(size_t i = 0; i < etats.size(); i++)
     {
@@ -447,7 +459,7 @@ Automate* Automate::copier() const
             netats.push_back(from);
         }
         tmp = etats[i]->get_succ(); // on récupère les transitions vers les successeurs
-        char ctmp = 0;  
+        char ctmp = 0;
          // on passe sur toutes les transitions
         for(size_t j = 0; j < tmp.size(); j++)
         {
@@ -507,13 +519,13 @@ Automate* Automate::completer() const
         }
         tmp = etats[i]->get_succ(); // on récupère les transitions vers les successeurs
         size_t j = 0;
-        char ctmp = 0;  
+        char ctmp = 0;
         while(c < (char)('a' + nb_symboles)) // on passe sur toutes les transitions
         {
             Etat* to;
             // si on est pas déjà passé sur toutes les transitions et que c est différent de la transitions courante
             // c'est à dire, si nous sommes sur une transition qui n'existe pas
-            if(j >= tmp.size() || c != tmp[j]->tr) 
+            if(j >= tmp.size() || c != tmp[j]->tr)
             {
                 ctmp = c; // la transition vaut c
                 to = puit; // la destination de la transition est le puit.
@@ -574,7 +586,7 @@ bool Automate::reconnaitre_mot(string mot)
             return false;
         }
     }
-    // nous avons parcouru tout notre mot, on regarde si l'état sur lequel on est est terminal. 
+    // nous avons parcouru tout notre mot, on regarde si l'état sur lequel on est est terminal.
     if(curr->get_ter())
     {
         return true;

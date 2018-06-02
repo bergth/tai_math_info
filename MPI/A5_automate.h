@@ -39,6 +39,7 @@ class Automate
         Automate* determiniser(bool asynchrone) const;
         Automate* determiniser_asynchrone() const;
         bool est_complet() const;
+        bool est_Standard() const;
         Automate* completer() const;
         bool reconnaitre_mot(std::string mot);
         void trouver_n_premiers_mots(size_t n, size_t l);
