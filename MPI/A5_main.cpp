@@ -25,7 +25,7 @@ int main()
     for(size_t i = 1; i <= 42; i++)
     {
         Automate* aut = lire_automate(i);
-        Automate* B = aut->determinisation_completion();
+        Automate* B = aut->standardiser();
         string a = "../tests_determinisation/"+u_to_nstring(i,2)+"_nd.txt";
         string b = "../tests_determinisation/"+u_to_nstring(i,2)+"_d.txt";
         std::ofstream out_nd(a.c_str());

@@ -2,6 +2,6 @@ digraph G {
     node [shape = point, color = white, fontcolor = white]; start0;
     node [shape = point, color = white, fontcolor = white]; end0;
     node [shape = circle, color = black, fontcolor = black];
-    start0 -> "{0}";
+    start0 -> "{I}";
    "{0}" ->  end0 ;
 }

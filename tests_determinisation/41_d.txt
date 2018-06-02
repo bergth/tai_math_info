@@ -5,6 +5,8 @@ digraph G {
     node [shape = point, color = white, fontcolor = white]; end2;
     node [shape = point, color = white, fontcolor = white]; end3;
     node [shape = circle, color = black, fontcolor = black];
+    "{I}" -> "{1}" [ label="a"];
+    "{I}" -> "{4}" [ label="b"];
     "{0}" -> "{1}" [ label="a"];
     "{0}" -> "{4}" [ label="b"];
     "{1}" -> "{2}" [ label="a"];
@@ -17,7 +19,7 @@ digraph G {
     "{4}" -> "{5}" [ label="b"];
     "{5}" -> "{5}" [ label="a"];
     "{5}" -> "{5}" [ label="b"];
-    start0 -> "{0}";
+    start0 -> "{I}";
    "{1}" ->  end0 ;
    "{4}" ->  end1 ;
    "{2}" ->  end2 ;
