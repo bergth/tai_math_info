@@ -682,3 +682,41 @@ void Automate::trouver_n_premiers_mots(size_t n, size_t l)
 }
 
 
+Automate* Automate::complementariser() const
+{
+    vector<Etat*> nv_terminal;
+    vector<Etat*> nv_entree;
+    vector<Trs*> tmp_transition;
+    vector<Etat*> tmps_eta;
+    int i;
+    Etat* tmp;
+
+    copier_et_trs(tmps_eta,tmp_transition);
+
+    for(i=0; i<nb_etats; i++)
+    {
+        tmp = tmps_eta[i];
+
+        if(tmp->get_ter()==true)
+        {
+            tmp->set_ter(false);
+        }
+
+        else if(tmp->get_ter()==false)
+        {
+            tmp->set_ter(true);
+            nv_terminal.push_back(tmp);
+        }
+
+        if(tmp->get_ini()==true)
+        {
+            nv_entree.push_back(tmp);
+        }
+
+    }
+
+    Automate* result = new Automate(nb_symboles,tmps_eta,tmp_transition);
+
+    return result;
+
+}

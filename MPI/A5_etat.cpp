@@ -85,6 +85,7 @@ void Trs::afficher() const
 Etat::Etat(vector<int> _labels, bool _ini, bool _ter): labels(_labels), ini(_ini), ter(_ter) {}
 
 
+
 int Etat::operator<(const Etat& right) const
 {
     return labels < right.get_vect_label();

@@ -47,6 +47,7 @@ class Automate
         void trouver_n_premiers_mots(size_t n, size_t l);
         Automate* copier() const;
         void copier_et_trs(std::vector<Etat*> &vect_etats, std::vector<Trs*> &transi) const;
+        Automate* complementariser() const;
 };
 
 #endif // AUTOMATE_H_INCLUDED

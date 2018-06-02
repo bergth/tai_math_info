@@ -54,7 +54,7 @@ class Etat
         bool get_ter();
         bool get_ini();
         void sort();
-        
+
 };
 
 int compare_etat_pt(const Etat* a, const Etat* b);
