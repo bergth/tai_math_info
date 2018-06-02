@@ -399,7 +399,6 @@ Automate* Automate::determiniser(bool asynchrone) const
 }
 
 
-
 bool Automate::est_complet() const
 {
     if(nb_etatsInitiaux != 1)
@@ -434,6 +433,12 @@ bool Automate::est_Standard() const
         if(transitions[i]->to == etatsInitiaux[0])
             return false;
     }
+    return true;
+
+}
+
+Automate* Automate::standardiser()
+{
 
 }
 
