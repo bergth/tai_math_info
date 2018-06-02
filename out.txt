@@ -1,44 +1,85 @@
 BEGIN ##
-1 : <e>,
-2 : <e>,a, aa, aaa, aaaa, aaaaa, aaaaaa, 
-3 : a, 
-4 : 
-5 : a, b, 
-6 : a, b, 
-7 : a, aa, aaa, aaaa, aaaaa, aaaaaa, 
-8 : a, aa, aaa, aaaa, aaaaa, aaaaaa, 
-9 : <e>,aaaaa, aaaba, abaaa, ababa, 
-10 : <e>,aaaaa, aaaba, abaaa, ababa, 
-11 : a, aba, ababa, 
-12 : <e>,a, aa, cd, aaa, acd, cbd, cda, aaaa, aacd, 
-13 : aa, aaa, aaaa, aaaaa, aaaaaa, 
-14 : d, ad, bd, cd, dd, aad, abd, acd, add, bbd, 
-15 : d, ad, bd, cd, dd, aad, abd, acd, add, bbd, 
-16 : abcd, aabcd, abbcd, abccd, abcdd, aaabcd, aabbcd, aabccd, aabcdd, abbbcd, 
-17 : d, cd, dd, bcd, ccd, cdd, ddd, abcd, bbcd, bccd, 
-18 : d, ad, bd, cd, aad, abd, acd, bbd, bcd, ccd, 
-19 : aa, aaa, aaaa, aaaaa, aaaaaa, 
-20 : d, cd, bcd, abcd, 
-21 : <e>,abcd, 
-22 : <e>,ad, acd, abcd, adad, acdad, adacd, abcdad, acdacd, adabcd, 
-23 : abbd, aabbd, abbbd, abbcd, abbdd, aaabbd, aabbbd, aabbcd, aabbdd, abbbbd, 
-24 : d, ad, bd, cd, dd, aad, abd, acd, add, bbd, 
-25 : d, ad, bd, cd, aad, abd, acd, bcd, cdd, aaad, 
-26 : ab, bb, aba, abb, bba, bbb, abaa, abab, abba, abbb, 
-27 : ab, bb, aba, abb, bba, bbb, abaa, abab, abba, abbb, 
-28 : aa, aaa, aaaa, aaaaaa, 
-29 : aa, aaa, aaaa, aaaaa, aaaaaa, 
-30 : aa, aaa, aaaa, aaaaa, aaaaaa, 
-31 : <e>,b, aa, ab, bb, aab, abb, bbb, aabb, abaa, abab, abbb, bbbb, aabbb, abaab, ababb, abbbb, bbbbb, aabbbb, abaabb, ababaa, ababab, ababbb, abbbbb, bbbbbb, 
-32 : <e>,a, b, c, aa, ac, bc, cc, aaa, aac,
-((b*+a)c)+((a*+b)c*)
-33 : <e>,a, b, c, aa, ac, bc, cc, aaa, aac, 
-34 : b, ab, bb, abb, bbb, abbb, bbbb, abbbb, bbbbb, abbbbb, 
-35 : a, ab, aba, ababa, 
-36 : <e>,a, b, aa, ab, ba, bb, aab, aba, abb, 
-37 : <e>,a, b, aa, ab, ba, bb, aab, aba, baa, bab, bba, bbb, aaba, aabb, abaa, abab, baab, baba, bbaa, bbab, bbba, bbbb, aabaa, aabab, aabba, aabbb, abaab, ababa, baaba, baabb, babaa, babab, bbaab, bbaba, bbbaa, bbbab, bbbba, bbbbb, aabaab, aababa, aabbaa, aabbab, aabbba, aabbbb, abaaba, abaabb, ababaa, ababab, baabaa, baabab, baabba, baabbb, babaab, bababa, bbaaba, bbaabb, bbabaa, bbabab, bbbaab, bbbaba, bbbbaa, bbbbab, bbbbba, bbbbbb, 
-38 : <e>,a, b, aa, ab, ba, bb, aaa, aab, aba, abb, baa, bab, bba, bbb, aaaa, aaab, aaba, aabb, abaa, abab, abba, abbb, baaa, baab, baba, babb, bbaa, bbab, bbba, bbbb, aaaaa, aaaab, aaaba, aaabb, aabaa, aabab, aabba, aabbb, abaaa, abaab, ababa, ababb, abbaa, abbab, abbba, abbbb, baaaa, baaab, baaba, baabb, babaa, babab, babba, babbb, bbaaa, bbaab, bbaba, bbabb, bbbaa, bbbab, bbbba, bbbbb, aaaaaa, aaaaab, aaaaba, aaaabb, aaabaa, aaabab, aaabba, aaabbb, aabaaa, aabaab, aababa, aababb, aabbaa, aabbab, aabbba, aabbbb, abaaaa, abaaab, abaaba, abaabb, ababaa, ababab, ababba, ababbb, abbaaa, abbaab, abbaba, abbabb, abbbaa, abbbab, abbbba, abbbbb, baaaaa, baaaab, baaaba, baaabb, baabaa, baabab, baabba, baabbb, babaaa, babaab, bababa, bababb, babbaa, babbab, babbba, babbbb, bbaaaa, bbaaab, bbaaba, bbaabb, bbabaa, bbabab, bbabba, bbabbb, bbbaaa, bbbaab, bbbaba, bbbabb, bbbbaa, bbbbab, bbbbba, bbbbbb, 
-39 : <e>,a, aa, ab, bb, aaa, aba, abb, baa, bba, 
-40 : <e>,a, b, aa, ab, ba, bb, aab, aba, abb, 
-41 : a, b, aa, ab, aaa, aab, aaaa, aaab, aaaaa, aaaab, 
-42 : <e>,ab, ba, abab, abba, baab, baba, ababab, ababba, abbaab, 
+1: <e>,
+OK
+2: <e>,a, aa, aaa, aaaa, aaaaa, aaaaaa, 
+OK
+3: a, 
+OK
+4: 
+OK
+5: a, b,
+OK
+6: a, b, 
+OK
+7: a, aa, aaa, aaaa, aaaaa, aaaaaa, 
+OK
+8: a, aa, aaa, aaaa, aaaaa, aaaaaa, 
+OK
+9: <e>,aaaaa, aaaba, abaaa, ababa, 
+OK
+10: <e>,aaaaa, aaaba, abaaa, ababa,
+OK 
+11: a, aba, ababa, 
+OK
+12: <e>,a, aa, cd, aaa, acd, cbd, cda, aaaa, aacd, acbd, acda, cbbd, cbda, cdaa, 
+OK
+13: aa, aaa, aaaa, aaaaa, aaaaaa, 
+OK
+14: d, ad, bd, cd, dd, aad, abd, acd, add, bbd, bcd, bdd, ccd, cdd, ddd, 
+OK
+15: d, ad, bd, cd, dd, aad, abd, acd, add, bbd, bcd, bdd, ccd, cdd, ddd, 
+OK
+16: abcd, aabcd, abbcd, abccd, abcdd, aaabcd, aabbcd, aabccd, aabcdd, abbbcd, abbccd, abbcdd, abcccd, abccdd, abcddd, 
+OK
+17: d, cd, dd, bcd, ccd, cdd, ddd, abcd, bbcd, bccd, bcdd, cccd, ccdd, cddd, dddd,
+OK 
+18: d, ad, bd, cd, aad, abd, acd, bbd, bcd, ccd, aaad, aabd, aacd, abbd, abcd, 
+OK
+19: aa, aaa, aaaa, aaaaa, aaaaaa, 
+OK
+20: d, cd, bcd, abcd, 
+OK
+21: <e>,abcd, 
+OK
+22: <e>,ad, acd, abcd, adad, acdad, adacd, abcdad, acdacd, adabcd, adadad, 
+OK
+23: abbd, aabbd, abbbd, abbcd, abbdd, aaabbd, aabbbd, aabbcd, aabbdd, abbbbd, abbbcd, abbbdd, abbccd, abbcdd, abbddd, 
+OK
+24: d, ad, bd, cd, dd, aad, abd, acd, add, bbd, bcd, bdd, ccd, cdd, ddd, 
+OK
+25: d, ad, bd, cd, aad, abd, acd, bcd, cdd, aaad, aabd, aacd, abbd, abcd, acdd, 
+OK
+26: ab, bb, aba, abb, bba, bbb, abaa, abab, abba, abbb, bbaa, bbab, bbba, bbbb, abaaa, abaab, ababa, ababb, abbaa, abbab, abbba, abbbb, bbaaa, bbaab, bbaba, bbabb, bbbaa, bbbab, bbbba, bbbbb, abaaaa, abaaab, abaaba, abaabb, ababaa, ababab, ababba, ababbb, abbaaa, abbaab, abbaba, abbabb, abbbaa, abbbab, abbbba, abbbbb, bbaaaa, bbaaab, bbaaba, bbaabb, bbabaa, bbabab, bbabba, bbabbb, bbbaaa, bbbaab, bbbaba, bbbabb, bbbbaa, bbbbab, bbbbba, bbbbbb, 
+OK
+27: ab, bb, aba, abb, bba, bbb, abaa, abab, abba, abbb, bbaa, bbab, bbba, bbbb, abaaa, abaab, ababa, ababb, abbaa, abbab, abbba, abbbb, bbaaa, bbaab, bbaba, bbabb, bbbaa, bbbab, bbbba, bbbbb, abaaaa, abaaab, abaaba, abaabb, ababaa, ababab, ababba, ababbb, abbaaa, abbaab, abbaba, abbabb, abbbaa, abbbab, abbbba, abbbbb, bbaaaa, bbaaab, bbaaba, bbaabb, bbabaa, bbabab, bbabba, bbabbb, bbbaaa, bbbaab, bbbaba, bbbabb, bbbbaa, bbbbab, bbbbba, bbbbbb, 
+OK
+28: aa, aaa, aaaa, aaaaaa, 
+OK
+29: aa, aaa, aaaa, aaaaa, aaaaaa, 
+OK
+30: aa, aaa, aaaa, aaaaa, aaaaaa, 
+OK
+31: <e>,b, aa, ab, bb, aab, abb, bbb, aabb, abaa, abab, abbb, bbbb, aabbb, abaab, 
+OK
+32: <e>,a, b, c, aa, ac, bc, cc, aaa, aac, acc, bbc, bcc, ccc, aaaa, aaac, aacc, accc, bbbc, bccc, cccc, aaaaa, aaaac, aaacc, aaccc, acccc, bbbbc, bcccc, ccccc, aaaaaa, aaaaac, aaaacc, aaaccc, aacccc, accccc, bbbbbc, bccccc, cccccc, 
+OK
+33: <e>,a, b, c, aa, ac, bc, cc, aaa, aac, acc, bbc, bcc, ccc, aaaa, aaac, aacc, accc, bbbc, bccc, cccc, aaaaa, aaaac, aaacc, aaccc, acccc, bbbbc, bcccc, ccccc, aaaaaa, aaaaac, aaaacc, aaaccc, aacccc, accccc, bbbbbc, bccccc, cccccc, 
+OK
+34: b, ab, bb, abb, bbb, abbb, bbbb, abbbb, bbbbb, abbbbb, bbbbbb, 
+OK
+35: a, ab, aba, ababa, 
+OK
+36: <e>,a, b, aa, ab, ba, bb, aab, aba, abb, baa, bab, bba, bbb, aaba, aabb, abaa, abab, abba, abbb, baab, baba, babb, bbaa, bbab, bbba, bbbb, aabaa, aabab, aabba, aabbb, abaab, ababa, ababb, abbaa, abbab, abbba, abbbb, baaba, baabb, babaa, babab, babba, babbb, bbaab, bbaba, bbabb, bbbaa, bbbab, bbbba, bbbbb, aabaab, aababa, aababb, aabbaa, aabbab, aabbba, aabbbb, abaaba, abaabb, ababaa, ababab, ababba, ababbb, abbaab, abbaba, abbabb, abbbaa, abbbab, abbbba, abbbbb, baabaa, baabab, baabba, baabbb, babaab, bababa, bababb, babbaa, babbab, babbba, babbbb, bbaaba, bbaabb, bbabaa, bbabab, bbabba, bbabbb, bbbaab, bbbaba, bbbabb, bbbbaa, bbbbab, bbbbba, bbbbbb, 
+OK
+37: <e>,a, b, aa, ab, ba, bb, aab, aba, baa, bab, bba, bbb, aaba, aabb, 
+OK
+38: <e>,a, b, aa, ab, ba, bb, aaa, aab, aba, abb, baa, bab, bba, bbb, 
+OK
+39: <e>,a, aa, ab, bb, aaa, aba, abb, baa, bba, aaaa, aabb, abaa, abba, abbb, 
+OK
+40: <e>,a, b, aa, ab, ba, bb, aab, aba, abb, baa, bab, bba, aaba, aabb, 
+OK
+41: a, b, aa, ab, aaa, aab, aaaa, aaab, aaaaa, aaaab, aaaaaa, aaaaab, 
+OK
+42: <e>,ab, ba, abab, abba, baab, baba, ababab, ababba, abbaab, abbaba, baabab, baabba, babaab, bababa, 
+ok

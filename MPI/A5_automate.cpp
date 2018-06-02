@@ -466,7 +466,6 @@ Automate* Automate::standardiser() const
         }
         oldInitiaux[i]->set_ini(false); //On supprime aux entrees leur statut d'entree
     }
-
     return new Automate(nb_symboles, netats, ntrs);
 }
 
