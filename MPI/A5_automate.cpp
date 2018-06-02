@@ -317,7 +317,7 @@ Automate* Automate::determiniser(bool asynchrone) const
     vector<int> nvec;
     nvec.push_back(-1);
     Etat* puit = new Etat(nvec,false,false);
-    netats.push_back(puit);
+    //netats.push_back(puit);
     // Cette file est utilisée pour la déterminisation
     // elle permet d'ajouter dans une sorte de file d'attente
     // les états à trouver.
@@ -394,6 +394,10 @@ Automate* Automate::determiniser(bool asynchrone) const
                 net->add_prec(trs_tmp); // liste des prédécesseur de l'état vers lequel arrive la transition.
             }
         }
+    }
+    if(puit->get_succ().size() != 0)
+    {
+        netats.push_back(puit);
     }
     return new Automate(nb_symboles,netats,ntrs);
 }

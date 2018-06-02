@@ -34,6 +34,8 @@ int main()
         out_d << B->to_dot();
         out_nd.close();
         out_d.close();
+        delete aut;
+        delete B;
     } 
     cout << "END ##" << endl;
     /*Automate* A = lire_automate(20);
