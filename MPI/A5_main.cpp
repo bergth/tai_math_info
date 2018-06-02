@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include<cstdlib>
 
 #include "A5_automate.h"
@@ -24,10 +25,17 @@ int main()
     for(size_t i = 1; i <= 42; i++)
     {
         Automate* aut = lire_automate(i);
-        cout << i << ": ";
-        aut->trouver_n_premiers_mots(15,6);
-        delete aut;
+        Automate* B = aut->determinisation_completion();
+        string a = "../tests_determinisation/"+u_to_nstring(i,2)+"_nd.txt";
+        string b = "../tests_determinisation/"+u_to_nstring(i,2)+"_d.txt";
+        std::ofstream out_nd(a.c_str());
+        std::ofstream out_d(b.c_str());
+        out_nd << aut->to_dot();
+        out_d << B->to_dot();
+        out_nd.close();
+        out_d.close();
     } 
+    cout << "END ##" << endl;
     /*Automate* A = lire_automate(20);
     Automate* B = A->determinisation_completion();
     cout << B->to_dot() << endl;
