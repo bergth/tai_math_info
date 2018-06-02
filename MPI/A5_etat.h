@@ -48,6 +48,7 @@ class Etat
         void set_old(std::vector<Etat*> ets);
         std::vector<Etat*> get_old() const;
         std::vector<Trs*> get_succ() const;
+        std::vector<Trs*> get_prec() const;
         void set_ter(bool _ter);
         void set_ini(bool _ini);
         bool get_ter();

@@ -324,13 +324,7 @@ Automate* Automate::determiniser(bool asynchrone) const
     queue<Etat*> q;
     // Vecteur contenant les nouvelles transitions
     vector<Trs*> ntrs;
-    for(size_t i = 0; i < nb_symboles; i++)
-    {
-        Trs* tmp = new Trs(puit,'a'+i,puit);
-        ntrs.push_back(tmp);
-        puit->add_prec(tmp);
-        puit->add_succ(tmp);
-    }
+
     // On créé le premier état initial composé des états initiaux de l'ancien automate
     Etat* net;
     if(asynchrone)
@@ -395,9 +389,20 @@ Automate* Automate::determiniser(bool asynchrone) const
             }
         }
     }
-    if(puit->get_succ().size() != 0)
+    if(puit->get_prec().size() != 0)
     {
+        for(size_t i = 0; i < nb_symboles; i++)
+        {
+            Trs* tmp = new Trs(puit,'a'+i,puit);
+            ntrs.push_back(tmp);
+            puit->add_prec(tmp);
+            puit->add_succ(tmp);
+        }
         netats.push_back(puit);
+    }
+    else
+    {
+        delete puit;
     }
     return new Automate(nb_symboles,netats,ntrs);
 }

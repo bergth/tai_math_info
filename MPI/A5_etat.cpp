@@ -196,6 +196,11 @@ std::vector<Trs*> Etat::get_succ() const
     return succ;
 }
 
+std::vector<Trs*> Etat::get_prec() const
+{
+    return prec;
+}
+
 void Etat::set_old(std::vector<Etat*> ets)
 {
     old = ets;
