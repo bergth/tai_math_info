@@ -1,22 +1,8 @@
 #include <iostream>
 #include <fstream>
-#include<cstdlib>
 #include "A5_execution.hpp"
 #include "A5_automate.h"
 using namespace std;
-
-Automate* lire_automate(size_t n)
-{
-    if(n <= 0 || n > 42)
-    {
-        cerr << "Erreur: automate doit être compris entre 1 et 42" << endl;
-        exit(1);
-    }
-    string prefix = "A5_";
-    string suffix = ".txt";
-    string name = u_to_nstring(n,2);
-    return new Automate((prefix+name+suffix).c_str());
-}
 
 
 int main()
