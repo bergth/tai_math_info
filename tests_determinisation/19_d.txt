@@ -1,11 +1,12 @@
 digraph G {
     node [shape = point, color = white, fontcolor = white]; start0;
     node [shape = point, color = white, fontcolor = white]; end0;
+    node [shape = point, color = white, fontcolor = white]; end1;
     node [shape = circle, color = black, fontcolor = black];
-    "{I}" -> "{2}" [ label="a"];
     "{0}" -> "{0}" [ label="a"];
     "{1}" -> "{2}" [ label="a"];
     "{2}" -> "{0}" [ label="a"];
-    start0 -> "{I}";
-   "{0}" ->  end0 ;
+    start0 -> "{1}";
+   "{1}" ->  end0 ;
+   "{2}" ->  end1 ;
 }

@@ -3,17 +3,15 @@ digraph G {
     node [shape = point, color = white, fontcolor = white]; end0;
     node [shape = point, color = white, fontcolor = white]; end1;
     node [shape = circle, color = black, fontcolor = black];
-    "{I}" -> "{0}" [ label="a"];
-    "{I}" -> "{2}" [ label="a"];
-    "{I}" -> "{0}" [ label="b"];
-    "{I}" -> "{4}" [ label="b"];
     "{0}" -> "{0}" [ label="a"];
     "{0}" -> "{0}" [ label="b"];
-    "{1}" -> "{2}" [ label="a"];
-    "{1}" -> "{0}" [ label="b"];
-    "{3}" -> "{0}" [ label="a"];
-    "{3}" -> "{4}" [ label="b"];
-    start0 -> "{I}";
-   "{2}" ->  end0 ;
-   "{4}" ->  end1 ;
+    "{0, 2}" -> "{0}" [ label="a"];
+    "{0, 2}" -> "{0}" [ label="b"];
+    "{0, 4}" -> "{0}" [ label="a"];
+    "{0, 4}" -> "{0}" [ label="b"];
+    "{1, 3}" -> "{0, 2}" [ label="a"];
+    "{1, 3}" -> "{0, 4}" [ label="b"];
+    start0 -> "{1, 3}";
+   "{0}" ->  end0 ;
+   "{1, 3}" ->  end1 ;
 }

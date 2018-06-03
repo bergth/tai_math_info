@@ -1,17 +1,19 @@
 digraph G {
     node [shape = point, color = white, fontcolor = white]; start0;
     node [shape = point, color = white, fontcolor = white]; end0;
+    node [shape = point, color = white, fontcolor = white]; end1;
     node [shape = circle, color = black, fontcolor = black];
-    "{0}" -> "{1}" [ label="*"];
-    "{0}" -> "{4}" [ label="*"];
-    "{1}" -> "{2}" [ label="*"];
-    "{1}" -> "{2}" [ label="a"];
-    "{2}" -> "{3}" [ label="b"];
-    "{3}" -> "{2}" [ label="*"];
-    "{3}" -> "{6}" [ label="*"];
-    "{4}" -> "{5}" [ label="b"];
-    "{5}" -> "{4}" [ label="*"];
-    "{5}" -> "{6}" [ label="*"];
-    start0 -> "{0}";
-   "{6}" ->  end0 ;
+    "{P}" -> "{P}" [ label="a"];
+    "{P}" -> "{P}" [ label="b"];
+    "{0, 1, 2, 4}" -> "{2}" [ label="a"];
+    "{0, 1, 2, 4}" -> "{2, 3, 4, 5, 6}" [ label="b"];
+    "{2}" -> "{P}" [ label="a"];
+    "{2}" -> "{2, 3, 6}" [ label="b"];
+    "{2, 3, 4, 5, 6}" -> "{P}" [ label="a"];
+    "{2, 3, 4, 5, 6}" -> "{2, 3, 4, 5, 6}" [ label="b"];
+    "{2, 3, 6}" -> "{P}" [ label="a"];
+    "{2, 3, 6}" -> "{2, 3, 6}" [ label="b"];
+    start0 -> "{0, 1, 2, 4}";
+   "{2, 3, 4, 5, 6}" ->  end0 ;
+   "{2, 3, 6}" ->  end1 ;
 }

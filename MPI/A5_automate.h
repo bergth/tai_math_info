@@ -34,20 +34,20 @@ class Automate
         void afficher_table() const;
         std::string to_dot();
         void sort();
-        bool est_synchrone() const;
+        bool est_asynchrone() const;
         bool est_deterministe() const;
         Automate* determinisation_completion() const;
         Automate* determiniser(bool asynchrone) const;
-        Automate* determiniser_asynchrone() const;
         bool est_complet() const;
         bool est_Standard() const;
         Automate* completer() const;
         Automate* standardiser() const;
-        bool reconnaitre_mot(std::string mot);
+        bool reconnaitre_mot(std::string mot) const;
         void trouver_n_premiers_mots(size_t n, size_t l);
         Automate* copier() const;
         void copier_et_trs(std::vector<Etat*> &vect_etats, std::vector<Trs*> &transi) const;
         Automate* complementariser() const;
+
 };
 
 #endif // AUTOMATE_H_INCLUDED

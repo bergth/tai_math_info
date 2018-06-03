@@ -2,10 +2,18 @@ digraph G {
     node [shape = point, color = white, fontcolor = white]; start0;
     node [shape = point, color = white, fontcolor = white]; end0;
     node [shape = circle, color = black, fontcolor = black];
+    "{P}" -> "{P}" [ label="a"];
+    "{P}" -> "{P}" [ label="b"];
+    "{P}" -> "{P}" [ label="c"];
+    "{P}" -> "{P}" [ label="d"];
+    "{0}" -> "{P}" [ label="a"];
     "{0}" -> "{0}" [ label="b"];
+    "{0}" -> "{P}" [ label="c"];
     "{0}" -> "{1}" [ label="d"];
     "{1}" -> "{1}" [ label="a"];
+    "{1}" -> "{P}" [ label="b"];
     "{1}" -> "{0}" [ label="c"];
+    "{1}" -> "{P}" [ label="d"];
     start0 -> "{1}";
    "{1}" ->  end0 ;
 }

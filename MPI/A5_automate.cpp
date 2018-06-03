@@ -237,16 +237,16 @@ void Automate::sort()
     std::sort(etats.begin(),etats.end(),compare_etat_pt);
 }
 
-bool Automate::est_synchrone() const
+bool Automate::est_asynchrone() const
 {
     // On cherche simplement si une transition à comme charactère '*'.
     // À partir de là on est sur que l'automate n'est pas synchrone.
     for(size_t i = 0; i < nb_transitions; i++)
     {
         if(transitions[i]->tr == '*')
-            return false;
+            return true;
     }
-    return true;
+    return false;
 }
 
 bool Automate::est_deterministe() const
@@ -257,7 +257,7 @@ bool Automate::est_deterministe() const
     }
     // on teste la transition 0 à part pour le cas asynchrone
     // car notre boucle commence à 1
-    if(nb_transitions == 0 && nb_symboles == 0)
+    if(nb_transitions == 0)
         return true;
 
     if(transitions[0]->tr == '*')
@@ -284,7 +284,7 @@ bool Automate::est_deterministe() const
 
 Automate* Automate::determinisation_completion() const
 {
-    if(!est_synchrone())
+    if(est_asynchrone())
     {
         return determiniser(true);
     }
@@ -604,7 +604,7 @@ Automate* Automate::completer() const
     return new Automate(nb_symboles,netats,ntrs);
 }
 
-bool Automate::reconnaitre_mot(string mot)
+bool Automate::reconnaitre_mot(string mot) const
 {
     // Si l'automate n'est pas déterministe, on ne peut pas tester le mot facilement sans transformation.
     if(!est_deterministe())
@@ -688,7 +688,7 @@ Automate* Automate::complementariser() const
     vector<Etat*> nv_entree;
     vector<Trs*> tmp_transition;
     vector<Etat*> tmps_eta;
-    int i;
+    size_t i;
     Etat* tmp;
 
     copier_et_trs(tmps_eta,tmp_transition);
