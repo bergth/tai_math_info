@@ -23,7 +23,6 @@ class Automate
         Trs* lire_grp_etats(std::string str);
         Etat* ajouter_etat(std::vector<int> &labels, bool ini, bool ter);
         Trs* ajouter_transition(Etat* from, char c, Etat* to);
-
     public:
         // Constructeur prend en paramètre le fichier contenant les données de l'automate à construire
         Automate(const char* file);
@@ -38,7 +37,7 @@ class Automate
         bool est_deterministe() const;
         Automate* determinisation_completion() const;
         Automate* determiniser(bool asynchrone) const;
-        bool est_complet() const;
+        bool est_deterministe_complet() const;
         bool est_Standard() const;
         Automate* completer() const;
         Automate* standardiser() const;

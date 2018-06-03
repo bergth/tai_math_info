@@ -147,7 +147,7 @@ void Automate::afficher_transitions()
     for(size_t i = 0; i < nb_transitions; i++)
     {
         cout << i << ": ";
-        transitions[i]->afficher();
+        cout << transitions[i]->get_str();
     }
 }
 
@@ -241,45 +241,60 @@ bool Automate::est_asynchrone() const
 {
     // On cherche simplement si une transition à comme charactère '*'.
     // À partir de là on est sur que l'automate n'est pas synchrone.
+    bool res = false;
+    cout << "Transitions epsilon trouvées: " << endl;
     for(size_t i = 0; i < nb_transitions; i++)
     {
         if(transitions[i]->tr == '*')
-            return true;
+        {
+            cout << "   - " << transitions[i]->get_str();
+            res = true;
+        }
     }
-    return false;
+    if(res)
+    {
+        cout << "Cet automate n'est pas asynchrone" << endl;
+    }
+    else
+    {
+        cout << "Cet automate est asynchrone" << endl;
+    }
+    return res;
 }
 
 bool Automate::est_deterministe() const
 {
+    bool res = true;
     if(nb_etatsInitiaux != 1)
     {
-        return false;
+        cout << "Il zero ou plusieurs états initiaux" << endl;
+        res = false;
     }
     // on teste la transition 0 à part pour le cas asynchrone
     // car notre boucle commence à 1
-    if(nb_transitions == 0)
-        return true;
 
-    if(transitions[0]->tr == '*')
+    for(size_t i = 0; i < nb_etats; i++)
     {
-            return false;
-    }
-    for(size_t i = 1; i < nb_transitions; i++)
-    {
-        // Si l'automate est asynchrone, il n'est pas déterministe.
-        if(transitions[i]->tr == '*')
+        for(char c = 'a'; c < (char)('a' + nb_symboles); c++)
         {
-            return false;
-        }
-        // Les transitions sont triées. Il suffit donc juste de savoir si la transition
-        // suivante est identique à la courante
-        if(transitions[i]->from->get_vect_label() == transitions[i-1]->from->get_vect_label() &&
-            transitions[i]->tr == transitions[i-1]->tr)
+            vector<Trs*> tmp = etats[i]->get_trs(c);
+            if(tmp.size() >= 2)
             {
-                return false;
+                cout << "Transitions multiples: " << endl;
+                for(size_t j = 0; j < tmp.size(); j++)
+                {
+                    cout << "   - " << tmp[j]->get_str() << endl;
+                }
+                res = false;
             }
+        }
+
     }
-    return true;
+    if(res)
+        cout << "Cet automate est déterministe" << endl;
+    else
+        cout << "Cet automate n'est pas déterministe" << endl;
+    return res;
 }
 
 Automate* Automate::determinisation_completion() const
@@ -292,7 +307,7 @@ Automate* Automate::determinisation_completion() const
     {
         if(est_deterministe())
         {
-            if(est_complet())
+            if(est_deterministe_complet())
             {
                 return copier();
             }
@@ -408,29 +423,31 @@ Automate* Automate::determiniser(bool asynchrone) const
 }
 
 
-bool Automate::est_complet() const
+bool Automate::est_deterministe_complet() const
 {
+    bool res = true;
     if(nb_etatsInitiaux != 1)
-        return false;
-    if(nb_transitions == 0 && nb_symboles == 0)
-        return true;
-    // si il y a zero transitions, il ne peut être complet.
-    if(nb_transitions == 0)
-        return false;
-    // on utilise c pour tester si les transitions se suivent bien.
-    // on peut faire celà car les transitions sont triées.
-    for(size_t i = 0; i < nb_etats; i++)
     {
-        vector<Trs*> tmp = etats[i]->get_succ();
-        if(tmp.size() != nb_symboles)
-            return false;
-        for(size_t j = 0; j < tmp.size(); j++)
+        cout << "Il y a zero ou plus d'un état initial" << endl;
+        res = false;
+    }
+    for(size_t i = 0; i < etats.size(); i++)
+    {
+        for(char c = 'a'; c < (char)('a' + nb_symboles); c++)
         {
-            if(tmp[j]->tr != (char)('a' + j))
-                return false;
+            vector<Trs*> tmp = etats[i]->get_trs(c);
+            if(tmp.size() == 0)
+            {
+                cout << "Aucune transitions de part de " << etats[i]->get_label() << " via " << c << "." << endl;
+                res = false;
+            }
         }
     }
-    return true;
+    if(res)
+        cout << "Cet automate est complet" << endl;
+    else
+        cout << "Cet automate n'est pas complet" << endl;
+    return res;
 }
 
 bool Automate::est_Standard() const
@@ -634,6 +651,7 @@ bool Automate::reconnaitre_mot(string mot) const
         // si on a pas trouvé de transition correspondant à la lettre courante, le mot n'est pas reconnu
         if(curr == NULL)
         {
+            cout << "Caractère qui empêche la reconnaissance de l'automate: " << mot[i] << endl;
             return false;
         }
     }

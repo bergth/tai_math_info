@@ -74,12 +74,9 @@ Trs::Trs(Etat* _from, char _tr, Etat* _to)
     to = _to;
 }
 
-void Trs::afficher() const
+string Trs::get_str() const
 {
-        cout << from->get_label() << " -> ";
-        cout << tr << " -> ";
-        cout << to->get_label();
-        cout << endl;
+    return from->get_label() + " -> " + tr + " -> " + to->get_label();
 }
 
 Etat::Etat(vector<int> _labels, bool _ini, bool _ter): labels(_labels), ini(_ini), ter(_ter) {}
@@ -144,8 +141,7 @@ void Etat::afficher_etat() const
     cout << "Transitions: " << endl;
     for(size_t i = 0; i < succ.size(); i++)
     {
-        cout << "   - ";
-        succ[i]->afficher();
+        cout << "   - " << succ[i]->get_str();
     }
     cout << endl;
 }
@@ -201,6 +197,18 @@ std::vector<Trs*> Etat::get_prec() const
 {
     return prec;
 }
+
+std::vector<Trs*> Etat::get_trs(char c) const
+{
+    vector<Trs*> n;
+    for(size_t i = 0; i < succ.size(); i++)
+    {
+        if(c == succ[i]->tr)
+            n.push_back(succ[i]);
+    }
+    return n;
+}
+
 
 void Etat::set_old(std::vector<Etat*> ets)
 {

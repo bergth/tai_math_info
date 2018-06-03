@@ -20,7 +20,7 @@ class Trs
         int operator<=(const Trs& right) const;
         int operator>(const Trs& right) const;
         int operator>=(const Trs& right) const;
-        void afficher() const;
+        std::string get_str() const;
 };
 
 int compare_trs_pt(const Trs* a, const Trs* b);
@@ -49,6 +49,7 @@ class Etat
         std::vector<Etat*> get_old() const;
         std::vector<Trs*> get_succ() const;
         std::vector<Trs*> get_prec() const;
+        std::vector<Trs*> get_trs(char c) const;
         void set_ter(bool _ter);
         void set_ini(bool _ini);
         bool get_ter();

@@ -48,7 +48,7 @@ void language_complementaire(const Automate* A)
 {
     const Automate* aut;
     Automate* comp;
-    if(A->est_complet())
+    if(A->est_deterministe_complet())
     {
         aut = A;
     }
@@ -59,7 +59,7 @@ void language_complementaire(const Automate* A)
     comp = aut->complementariser();
     comp->afficher_table();
     reconnaissance_de_mots(comp);
-    if(!(A->est_complet()))
+    if(!(A->est_deterministe_complet()))
         delete aut;
     delete comp;
 }

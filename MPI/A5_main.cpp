@@ -8,11 +8,14 @@ using namespace std;
 int main()
 {
     cout << "BEGIN ##" << endl;
-    Automate* aut = lire_automate(1);
+    Automate* aut = lire_automate(40);
     aut->afficher_table();
-    reconnaissance_de_mots(aut);
-    language_complementaire(aut);
+    //reconnaissance_de_mots(aut);
+    //language_complementaire(aut);
+    Automate* B = aut->determinisation_completion();
+    B->afficher_table();
     delete aut;
+    delete B;
     /*for(size_t i = 1; i <= 42; i++)
     {
         Automate* aut = lire_automate(i);
