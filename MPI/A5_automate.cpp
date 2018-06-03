@@ -237,16 +237,16 @@ void Automate::sort()
     std::sort(etats.begin(),etats.end(),compare_etat_pt);
 }
 
-bool Automate::est_asynchrone() const
+bool Automate::est_synchrone() const
 {
     // On cherche simplement si une transition à comme charactère '*'.
     // À partir de là on est sur que l'automate n'est pas synchrone.
     for(size_t i = 0; i < nb_transitions; i++)
     {
         if(transitions[i]->tr == '*')
-            return true;
+            return false;
     }
-    return false;
+    return true;
 }
 
 bool Automate::est_deterministe() const
@@ -257,7 +257,7 @@ bool Automate::est_deterministe() const
     }
     // on teste la transition 0 à part pour le cas asynchrone
     // car notre boucle commence à 1
-    if(nb_transitions == 0)
+    if(nb_transitions == 0 && nb_symboles == 0)
         return true;
 
     if(transitions[0]->tr == '*')
@@ -284,7 +284,7 @@ bool Automate::est_deterministe() const
 
 Automate* Automate::determinisation_completion() const
 {
-    if(est_asynchrone())
+    if(!est_synchrone())
     {
         return determiniser(true);
     }
@@ -317,14 +317,20 @@ Automate* Automate::determiniser(bool asynchrone) const
     vector<int> nvec;
     nvec.push_back(-1);
     Etat* puit = new Etat(nvec,false,false);
-    //netats.push_back(puit);
+    netats.push_back(puit);
     // Cette file est utilisée pour la déterminisation
     // elle permet d'ajouter dans une sorte de file d'attente
     // les états à trouver.
     queue<Etat*> q;
     // Vecteur contenant les nouvelles transitions
     vector<Trs*> ntrs;
-
+    for(size_t i = 0; i < nb_symboles; i++)
+    {
+        Trs* tmp = new Trs(puit,'a'+i,puit);
+        ntrs.push_back(tmp);
+        puit->add_prec(tmp);
+        puit->add_succ(tmp);
+    }
     // On créé le premier état initial composé des états initiaux de l'ancien automate
     Etat* net;
     if(asynchrone)
@@ -389,21 +395,6 @@ Automate* Automate::determiniser(bool asynchrone) const
             }
         }
     }
-    if(puit->get_prec().size() != 0)
-    {
-        for(size_t i = 0; i < nb_symboles; i++)
-        {
-            Trs* tmp = new Trs(puit,'a'+i,puit);
-            ntrs.push_back(tmp);
-            puit->add_prec(tmp);
-            puit->add_succ(tmp);
-        }
-        netats.push_back(puit);
-    }
-    else
-    {
-        delete puit;
-    }
     return new Automate(nb_symboles,netats,ntrs);
 }
 
@@ -449,38 +440,30 @@ bool Automate::est_Standard() const
 Automate* Automate::standardiser() const
 {
     // vecteur des nouveaux états
-    vector<Etat*> netats;
+    vector<Etat*> netats = etats;
     // vecteur des nouvelles transitions
-    vector<Trs*> ntrs;
-    copier_et_trs(netats,ntrs);
-    vector<Etat*> oldInitiaux;
-    for(size_t i = 0;i < netats.size(); i++)
-    {
-        if(netats[i]->get_ini())
-            oldInitiaux.push_back(netats[i]);
-    }
+    vector<Trs*> ntrs = transitions;
     vector<int> nvec;
-    nvec.push_back(-2);
+    nvec.push_back(-1);
     Etat* ninit = new Etat(nvec,true,false);
     netats.push_back(ninit);
-    for(size_t i = 0; i < oldInitiaux.size(); i++)
+    for(size_t i = 0; i < nb_etatsInitiaux; i++)
     {
-
-        for(size_t j = 0; j < oldInitiaux[i]->get_succ().size(); j++) //Pour toutes les transitions partant des entrees...
+        for(size_t j = 0; j < etatsInitiaux[i]->get_succ().size(); j++) //Pour toutes les transitions partant des entrees...
         {
-            Trs* nt = new Trs(ninit, oldInitiaux[i]->get_succ()[j]->tr, oldInitiaux[i]->get_succ()[j]->to); //...On ajoute une transition du meme caractere du nouvel etat inital aux entrees
+            Trs* nt = new Trs(ninit, etatsInitiaux[i]->get_succ()[j]->tr, etatsInitiaux[i]->get_succ()[j]->to); //...On ajoute une transition du meme caractere du nouvel etat inital aux états où menaient les entrees
             ntrs.push_back(nt);
-            ninit->add_succ(nt);
-            oldInitiaux[i]->add_prec(nt);
         }
-        oldInitiaux[i]->set_ini(false); //On supprime aux entrees leur statut d'entree
+        etatsInitiaux[i]->set_ini(false); //On supprime aux entrees leur statut d'entree
     }
+
+
     return new Automate(nb_symboles, netats, ntrs);
 }
 
-void Automate::copier_et_trs(std::vector<Etat*> &vect_etats, std::vector<Trs*> &transi) const
+Automate* Automate::copier() const
 {
-        // vecteur des nouveaux états
+    // vecteur des nouveaux états
     vector<Etat*> netats;
     // vecteur des nouvelles transitions
     vector<Trs*> ntrs;
@@ -523,17 +506,7 @@ void Automate::copier_et_trs(std::vector<Etat*> &vect_etats, std::vector<Trs*> &
         }
     }
     // on créé un nouvel automate à partir du vecteur de nouveaux états et de nouvelles transitions
-    //return new Automate(nb_symboles,netats,ntrs);
-    vect_etats = netats;
-    transi = ntrs;
-}
-
-Automate* Automate::copier() const
-{
-    vector<Etat*> etats;
-    vector<Trs*> transi;
-    copier_et_trs(etats,transi);
-    return new Automate(nb_symboles,etats,transi);
+    return new Automate(nb_symboles,netats,ntrs);
 }
 
 Automate* Automate::completer() const
@@ -604,7 +577,7 @@ Automate* Automate::completer() const
     return new Automate(nb_symboles,netats,ntrs);
 }
 
-bool Automate::reconnaitre_mot(string mot) const
+bool Automate::reconnaitre_mot(string mot)
 {
     // Si l'automate n'est pas déterministe, on ne peut pas tester le mot facilement sans transformation.
     if(!est_deterministe())
@@ -682,41 +655,40 @@ void Automate::trouver_n_premiers_mots(size_t n, size_t l)
 }
 
 
-Automate* Automate::complementariser() const
+/*
+void strandardisation()
 {
-    vector<Etat*> nv_terminal;
-    vector<Etat*> nv_entree;
-    vector<Trs*> tmp_transition;
-    vector<Etat*> tmps_eta;
-    size_t i;
-    Etat* tmp;
-
-    copier_et_trs(tmps_eta,tmp_transition);
-
-    for(i=0; i<nb_etats; i++)
+    vector<Trs*>::iterator it;
+    vector<Etat*>::iterator eit;
+    bool tr_vers_entree = false; //si des transitions reviennent vers l'entree
+    bool entree_ter = false; //si au moins une entree est terminale
+    for(eit = etatsInitiaux.begin(); eit != etatsInitiaux.end(); eit++)
     {
-        tmp = tmps_eta[i];
-
-        if(tmp->get_ter()==true)
+        if(**eit.init == true) entree_ter = true;
+        for(it = transitions.begin(); it != transitions.end(); it++)
         {
-            tmp->set_ter(false);
-        }
-
-        else if(tmp->get_ter()==false)
-        {
-            tmp->set_ter(true);
-            nv_terminal.push_back(tmp);
-        }
-
-        if(tmp->get_ini()==true)
-        {
-            nv_entree.push_back(tmp);
+            if(get<0>(**it) == (**eit)) tr_vers_entree == false;
         }
 
     }
 
-    Automate* result = new Automate(nb_symboles,tmps_eta,tmp_transition);
+    if(nb_etatsInitiaux > 1 || tr_entree == true) // condition pour non-standardise
+    {
+        if(entree_ter == true) // Si l'automate reconnait le mot vide
+            Etat *init = ajouter_etat(, true, true);
+        else Etat *init = ajouter_etat(, true, false);
 
-    return result;
+        for(eit = etatsInitiaux.begin(); eit != etatsInitiaux.end(); eit++)
+        {
+            **eit.init = false;
 
+            //Il faut relier le nouvel etat initial aux anciens. Je ne sais pas comment faire.
+        }
+
+        etatsInitiaux.erase(etatsInitiaux.begin(), etatsInitiaux.end());
+        etatInitiaux[0] = *init;
+
+
+    }
 }
+*/
