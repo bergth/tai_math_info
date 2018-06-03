@@ -6,3 +6,4 @@ std::string lire_mot();
 void reconnaissance_de_mots(const Automate* A);
 void language_complementaire(const Automate* A);
 void standardisation(const Automate* A);
+void traitements(size_t n);

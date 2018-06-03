@@ -63,3 +63,23 @@ void language_complementaire(const Automate* A)
         delete aut;
     delete comp;
 }
+
+void traitements(size_t n)
+{
+    Automate* A = lire_automate(n);
+    cout << "[AF]--------------------------" << endl << endl;
+    A->afficher_table();
+    Automate* B = A->determinisation_completion();
+    cout << "[AFDC]------------------------" << endl << endl;
+    B->afficher_table();
+    Automate* C = B->complementariser();
+    cout << "[AComp]-----------------------" << endl << endl;
+    C->afficher_table();
+    Automate* D = C->standardiser();
+    cout << "[ACompStd]--------------------" << endl << endl;
+    D->afficher_table();
+    delete A;
+    delete B;
+    delete C;
+    delete D;
+}

@@ -141,7 +141,7 @@ void Etat::afficher_etat() const
     cout << "Transitions: " << endl;
     for(size_t i = 0; i < succ.size(); i++)
     {
-        cout << "   - " << succ[i]->get_str();
+        cout << "   - " << succ[i]->get_str() << endl;
     }
     cout << endl;
 }
