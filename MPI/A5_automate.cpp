@@ -161,7 +161,7 @@ void Automate::afficher_table() const
     cout << endl;
     for(size_t i = 0; i < nb_etats; i++)
     {
-        etats[i]->afficher_etat();
+        etats[i]->afficher_etat(nb_symboles);
     }
 }
 
@@ -254,11 +254,11 @@ bool Automate::est_asynchrone() const
     }
     if(res)
     {
-        cout << "   Cet automate n'est pas asynchrone" << endl;
+        cout << "   Cet automate est asynchrone" << endl;
     }
     else
     {
-        cout << "   Cet automate est asynchrone" << endl;
+        cout << "   Cet automate n'est pas asynchrone" << endl;
     }
     cout << "[FIN TEST ASYNCHRONE]" << endl;
     return res;
@@ -294,9 +294,9 @@ bool Automate::est_deterministe() const
 
     }
     if(res)
-        cout << "Cet automate est déterministe" << endl;
+        cout << "   Cet automate est déterministe" << endl;
     else
-        cout << "Cet automate n'est pas déterministe" << endl;
+        cout << "   Cet automate n'est pas déterministe" << endl;
     cout << "[FIN TEST DETERMINISTE]" << endl;
     return res;
 }

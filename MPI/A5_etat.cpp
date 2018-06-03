@@ -125,7 +125,7 @@ string Etat::get_label() const
     return str;
 }
 
-void Etat::afficher_etat() const
+void Etat::afficher_etat(int nb_symboles) const
 {
     cout << "[" << get_label() << "]-----------" << endl;
     if(ini)
@@ -139,9 +139,14 @@ void Etat::afficher_etat() const
         cout << " ";
     cout << endl;
     cout << "Transitions: " << endl;
-    for(size_t i = 0; i < succ.size(); i++)
+    for(char c = 'a' ;  c < (char)('a' + nb_symboles); c++)
     {
-        cout << "   - " << succ[i]->get_str() << endl;
+        vector<Trs*> tmp = get_trs(c);
+        cout << "   - " << tmp.size() << " transitions en " << c << endl;
+        for(size_t i = 0; i < tmp.size(); i++)
+        {
+            cout << "       - " << tmp[i]->get_str() << endl;
+        }
     }
     cout << endl;
 }

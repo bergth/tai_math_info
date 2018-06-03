@@ -42,7 +42,7 @@ class Etat
         //~Etat();
         std::string get_label() const;
         std::vector<int> get_vect_label() const;
-        void afficher_etat() const;
+        void afficher_etat(int nb_symboles) const;
         void add_prec(Trs* _prec);
         void add_succ(Trs* _succ);
         void set_old(std::vector<Etat*> ets);

@@ -12,7 +12,7 @@ int main()
     {
         traitements(i);
     }*/
-    traitements(35);
+    traitements(40);
     cout << "END ##" << endl;
     /*Automate* A = lire_automate(20);
     Automate* B = A->determinisation_completion();
