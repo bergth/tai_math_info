@@ -3,6 +3,7 @@
 #include<cstdlib>
 #include<algorithm>
 #include<queue>
+#include<map>
 #include "A5_automate.h"
 #include "A5_utile.h"
 
@@ -29,7 +30,7 @@ Automate::Automate(const char* fname)
     {
         vector<int> nvec;
         nvec.push_back((int)(i));
-        Etat* tmp = new Etat(nvec,false,false);
+        Etat* tmp = new Etat(nvec,false,false,false);
         etats.push_back(tmp);
     }
 
@@ -92,9 +93,10 @@ Automate::Automate(const char* fname)
         ajouter_transition(from,c,to);
     }
    this->sort();
+   this->affichage_minimal = false;
 }
 
-Automate::Automate(size_t _nb_symboles, std::vector<Etat*> _etats, std::vector<Trs*> _trs)
+Automate::Automate(size_t _nb_symboles, std::vector<Etat*> _etats, std::vector<Trs*> _trs,bool _aminimal)
 {
     nb_symboles = _nb_symboles;
     nb_etats = _etats.size();
@@ -117,6 +119,7 @@ Automate::Automate(size_t _nb_symboles, std::vector<Etat*> _etats, std::vector<T
         }
     }
     this->sort();
+    this->affichage_minimal = _aminimal;
 }
 
 Automate::~Automate()
@@ -153,6 +156,13 @@ void Automate::afficher_transitions()
 
 void Automate::afficher_table() const
 {
+    if(affichage_minimal)
+    {
+        for(size_t i = 0; i < etats.size(); i++)
+        {
+            cout << etats[i]->get_label() << " <-> " << etats[i]->get_name_old() << endl;
+        }
+    }
     cout << "alphabet: ";
     for(size_t i = 0; i < nb_symboles; i++)
     {
@@ -167,7 +177,7 @@ void Automate::afficher_table() const
 
 Etat* Automate::ajouter_etat(vector<int> &labels, bool ini, bool ter)
 {
-    Etat* netat = new Etat(labels, ini, ter);
+    Etat* netat = new Etat(labels, ini, ter,false);
     etats.push_back(netat);
     return netat;
 }
@@ -239,38 +249,38 @@ void Automate::sort()
 
 bool Automate::est_asynchrone() const
 {
-    cout << "[TEST ASYNCHRONE]" << endl;
+  //  cout << "[TEST ASYNCHRONE]" << endl;
     // On cherche simplement si une transition à comme charactère '*'.
     // À partir de là on est sur que l'automate n'est pas synchrone.
     bool res = false;
-    cout << "   Transitions epsilon trouvées: " << endl;
+  //  cout << "   Transitions epsilon trouvées: " << endl;
     for(size_t i = 0; i < nb_transitions; i++)
     {
         if(transitions[i]->tr == '*')
         {
-            cout << "      - " << transitions[i]->get_str() << endl;
+         //   cout << "      - " << transitions[i]->get_str() << endl;
             res = true;
         }
     }
     if(res)
     {
-        cout << "   Cet automate est asynchrone" << endl;
+      //  cout << "   Cet automate est asynchrone" << endl;
     }
     else
     {
-        cout << "   Cet automate n'est pas asynchrone" << endl;
+      //  cout << "   Cet automate n'est pas asynchrone" << endl;
     }
-    cout << "[FIN TEST ASYNCHRONE]" << endl;
+  //  cout << "[FIN TEST ASYNCHRONE]" << endl;
     return res;
 }
 
 bool Automate::est_deterministe() const
 {
-    cout << "[TEST DETERMINISTE]" << endl;
+   // cout << "[TEST DETERMINISTE]" << endl;
     bool res = true;
     if(nb_etatsInitiaux != 1)
     {
-        cout << "   Il zero ou plusieurs états initiaux" << endl;
+      //  cout << "   Il zero ou plusieurs états initiaux" << endl;
         res = false;
     }
     // on teste la transition 0 à part pour le cas asynchrone
@@ -283,21 +293,21 @@ bool Automate::est_deterministe() const
             vector<Trs*> tmp = etats[i]->get_trs(c);
             if(tmp.size() >= 2)
             {
-                cout << "   Transitions multiples: " << endl;
+              //  cout << "   Transitions multiples: " << endl;
                 for(size_t j = 0; j < tmp.size(); j++)
                 {
-                    cout << "      - " << tmp[j]->get_str() << endl;
+                  //  cout << "      - " << tmp[j]->get_str() << endl;
                 }
                 res = false;
             }
         }
 
     }
-    if(res)
-        cout << "   Cet automate est déterministe" << endl;
-    else
-        cout << "   Cet automate n'est pas déterministe" << endl;
-    cout << "[FIN TEST DETERMINISTE]" << endl;
+  //  if(res)
+      //  cout << "   Cet automate est déterministe" << endl;
+  //  else
+      //  cout << "   Cet automate n'est pas déterministe" << endl;
+   // cout << "[FIN TEST DETERMINISTE]" << endl;
     return res;
 }
 
@@ -335,7 +345,7 @@ Automate* Automate::determiniser(bool asynchrone) const
     // on place un état puit (avec le nom '-1')
     vector<int> nvec;
     nvec.push_back(-1);
-    Etat* puit = new Etat(nvec,false,false);
+    Etat* puit = new Etat(nvec,false,false,false);
     //netats.push_back(puit);
     // Cette file est utilisée pour la déterminisation
     // elle permet d'ajouter dans une sorte de file d'attente
@@ -423,17 +433,17 @@ Automate* Automate::determiniser(bool asynchrone) const
     {
         delete puit;
     }
-    return new Automate(nb_symboles,netats,ntrs);
+    return new Automate(nb_symboles,netats,ntrs,false);
 }
 
 
 bool Automate::est_deterministe_complet() const
 {
-    cout << "[TEST DETERMINISTE COMPLET]" << endl;
+   // cout << "[TEST DETERMINISTE COMPLET]" << endl;
     bool res = true;
     if(nb_etatsInitiaux != 1)
     {
-        cout << "   Il y a zero ou plus d'un état initial" << endl;
+     //   cout << "   Il y a zero ou plus d'un état initial" << endl;
         res = false;
     }
     for(size_t i = 0; i < etats.size(); i++)
@@ -443,7 +453,7 @@ bool Automate::est_deterministe_complet() const
             vector<Trs*> tmp = etats[i]->get_trs(c);
             if(tmp.size() == 0)
             {
-                cout << "   Aucune transitions de part de " << etats[i]->get_label() << " via " << c << "." << endl;
+               // cout << "   Aucune transitions de part de " << etats[i]->get_label() << " via " << c << "." << endl;
                 res = false;
             }
             if(tmp.size() > 1)
@@ -451,17 +461,17 @@ bool Automate::est_deterministe_complet() const
                 cout << "   Transitions multiples: " << endl;
                 for(size_t j = 0; j < tmp.size(); j++)
                 {
-                    cout << "      - " << tmp[j]->get_str() << endl;
+                  //  cout << "      - " << tmp[j]->get_str() << endl;
                 }
                 res = false;
             }
         }
     }
-    if(res)
-        cout << "   Cet automate est complet" << endl;
-    else
-        cout << "   Cet automate n'est pas complet" << endl;
-    cout << "[FIN TEST DETERMINISTE COMPLET]" << endl;
+   // if(res)
+      //  cout << "   Cet automate est complet" << endl;
+  //  else
+      //  cout << "   Cet automate n'est pas complet" << endl;
+   // cout << "[FIN TEST DETERMINISTE COMPLET]" << endl;
     return res;
 }
 
@@ -493,7 +503,7 @@ Automate* Automate::standardiser() const
     }
     vector<int> nvec;
     nvec.push_back(-2);
-    Etat* ninit = new Etat(nvec,true,false);
+    Etat* ninit = new Etat(nvec,true,false,false);
     netats.push_back(ninit);
     for(size_t i = 0; i < oldInitiaux.size(); i++)
     {
@@ -507,7 +517,7 @@ Automate* Automate::standardiser() const
         }
         oldInitiaux[i]->set_ini(false); //On supprime aux entrees leur statut d'entree
     }
-    return new Automate(nb_symboles, netats, ntrs);
+    return new Automate(nb_symboles, netats, ntrs,false);
 }
 
 void Automate::copier_et_trs(std::vector<Etat*> &vect_etats, std::vector<Trs*> &transi) const
@@ -528,7 +538,7 @@ void Automate::copier_et_trs(std::vector<Etat*> &vect_etats, std::vector<Trs*> &
         Etat* from = find_etat(netats,etats[i]);
         if(!from) // si non, on créer un nouvel état "copie" et on l'ajoute dans le vecteur
         {
-            from = new Etat(etats[i]->get_vect_label(),etats[i]->get_ini(),etats[i]->get_ter());
+            from = new Etat(etats[i]->get_vect_label(),etats[i]->get_ini(),etats[i]->get_ter(),false);
             netats.push_back(from);
         }
         tmp = etats[i]->get_succ(); // on récupère les transitions vers les successeurs
@@ -543,7 +553,7 @@ void Automate::copier_et_trs(std::vector<Etat*> &vect_etats, std::vector<Trs*> &
             to = find_etat(netats,tmp[j]->to); // on cherche l'état de la destination de la transition
             if(!to) // si il n'existe pas dans le vecteur, on le créé et on l'ajoute
             {
-                to = new Etat(tmp[j]->to->get_vect_label(),tmp[j]->to->get_ini(),tmp[j]->to->get_ter());
+                to = new Etat(tmp[j]->to->get_vect_label(),tmp[j]->to->get_ini(),tmp[j]->to->get_ter(),false);
                 netats.push_back(to);
             }
             // on créé la transition et on l'ajoute là ou il faut
@@ -565,7 +575,7 @@ Automate* Automate::copier() const
     vector<Etat*> etats;
     vector<Trs*> transi;
     copier_et_trs(etats,transi);
-    return new Automate(nb_symboles,etats,transi);
+    return new Automate(nb_symboles,etats,transi,this->affichage_minimal);
 }
 
 Automate* Automate::completer() const
@@ -579,7 +589,7 @@ Automate* Automate::completer() const
     // création et ajout d'un vecteur puit dans netats
     vector<int> nvec;
     nvec.push_back(-1);
-    Etat* puit = new Etat(nvec,false,false);
+    Etat* puit = new Etat(nvec,false,false,false);
     netats.push_back(puit);
     // on ajoute toutes les transitions allant du puit vers le puit
     for(size_t i = 0; i < nb_symboles; i++)
@@ -597,7 +607,7 @@ Automate* Automate::completer() const
         Etat* from = find_etat(netats,etats[i]);
         if(!from) // si non, on créer un nouvel état "copie" et on l'ajoute dans le vecteur
         {
-            from = new Etat(etats[i]->get_vect_label(),etats[i]->get_ini(),etats[i]->get_ter());
+            from = new Etat(etats[i]->get_vect_label(),etats[i]->get_ini(),etats[i]->get_ter(),false);
             netats.push_back(from);
         }
         tmp = etats[i]->get_succ(); // on récupère les transitions vers les successeurs
@@ -619,7 +629,7 @@ Automate* Automate::completer() const
                 to = find_etat(netats,tmp[j]->to); // on cherche l'état de la destination de la transition
                 if(!to) // si il n'existe pas dans le vecteur, on le créé et on l'ajoute
                 {
-                    to = new Etat(tmp[j]->to->get_vect_label(),tmp[j]->to->get_ini(),tmp[j]->to->get_ter());
+                    to = new Etat(tmp[j]->to->get_vect_label(),tmp[j]->to->get_ini(),tmp[j]->to->get_ter(),false);
                     netats.push_back(to);
                 }
                 j++; // on a passé une transition, on incrémente j.
@@ -633,7 +643,7 @@ Automate* Automate::completer() const
         }
     }
     // on créé un nouvel automate à partir du vecteur de nouveaux états et de nouvelles transitions
-    return new Automate(nb_symboles,netats,ntrs);
+    return new Automate(nb_symboles,netats,ntrs,false);
 }
 
 bool Automate::reconnaitre_mot(string mot) const
@@ -666,7 +676,7 @@ bool Automate::reconnaitre_mot(string mot) const
         // si on a pas trouvé de transition correspondant à la lettre courante, le mot n'est pas reconnu
         if(curr == NULL)
         {
-            cout << "Caractère qui empêche la reconnaissance de l'automate: " << mot[i] << endl;
+            //cout << "Caractère qui empêche la reconnaissance de l'automate: " << mot[i] << endl;
             return false;
         }
     }
@@ -748,8 +758,147 @@ Automate* Automate::complementariser() const
 
     }
 
-    Automate* result = new Automate(nb_symboles,tmps_eta,tmp_transition);
+    Automate* result = new Automate(nb_symboles,tmps_eta,tmp_transition,false);
 
     return result;
 
+}
+
+
+int find_etats_groupes(const vector< vector < int > > vect, int val)
+{
+    for(size_t i = 0; i < vect.size(); i++)
+    {
+        for(size_t j = 0; j < vect[i].size(); j++)
+        {
+            if(vect[i][j] == val)
+            {
+                return i;
+            }
+        }
+    }
+    cerr << "error find" << endl;
+    exit(1);
+}
+
+Automate* Automate::minimiser() const
+{
+    bool est_minimal = false;
+    std::map<Etat*,int> map;
+    for(size_t i = 0; i < nb_etats; i++)
+    {
+     //   cout << i << ": " << etats[i]->get_label() << endl;
+        map[etats[i]] = i;
+    }
+
+    vector< vector < int > > groupes;
+    vector<int> ter;
+    vector<int> nter;
+    for(size_t i = 0; i < nb_etats; i++)
+    {
+
+        if(etats[i]->get_ter())
+        {
+            ter.push_back(i);
+        }
+        else
+        {
+            nter.push_back(i);
+        }
+    }
+    groupes.push_back(ter);
+    groupes.push_back(nter);
+    int n = 0;
+    while(!est_minimal)
+    {
+        //<cout << n << ": ";
+        for(size_t i = 0; i < groupes.size(); i++)
+        {
+            // cout << "{ ";
+            for(size_t j = 0; j < groupes[i].size(); j++)
+            {
+           //     cout << groupes[i][j] << ", ";
+            }
+         //   cout << "}, ";
+        }
+       // cout << endl;
+        vector< vector <int> > ngroupes;
+        for(size_t i = 0; i < groupes.size(); i++)
+        {
+            vector<int> curr = groupes[i];
+            std::map< vector<int> ,vector<int> > map_motifs;
+            for(size_t j = 0; j < curr.size(); j++)
+            {
+                vector<int> motifsj;
+             //   cout << i << "&" << j << endl;
+                for(size_t k = 0; k < nb_symboles; k++)
+                {
+                    Etat* to = etats[curr[j]]->get_trs('a' + k)[0]->to;
+                 //   cout << map[to] << "->" << find_etats_groupes(groupes,map[to]) << " ";
+                    motifsj.push_back(find_etats_groupes(groupes,map[to]));
+                }
+             //   cout << endl;
+                map_motifs[motifsj].push_back(curr[j]);
+            }
+            for(std::map< vector<int> , vector<int> >::iterator i = map_motifs.begin(); i != map_motifs.end(); i++)
+            {
+            vector<int> tmp = (*i).second;
+            std::sort(tmp.begin(),tmp.end());
+            ngroupes.push_back(tmp);
+            }
+
+        }
+        if(ngroupes.size() == groupes.size())
+            est_minimal = true;
+        groupes = ngroupes;
+      /*  cout << n << ": ";
+        for(size_t i = 0; i < groupes.size(); i++)
+        {
+            cout << "{ ";
+            for(size_t j = 0; j < groupes[i].size(); j++)
+            {
+                cout << groupes[i][j] << ", ";
+            }
+            cout << "}, ";
+        }
+        cout << endl;*/ 
+        n++;
+    }
+
+    vector<Etat*> netats;
+    vector<Trs*> ntrs;
+    for(size_t i = 0; i < groupes.size(); i++)
+    {
+        vector<Etat*> old;
+        bool ini = false;
+        bool ter = false;
+        for(size_t j = 0; j < groupes[i].size(); j++)
+        {
+            old.push_back(etats[groupes[i][j]]);
+            if(etats[groupes[i][j]]->get_ini())
+                ini = true;
+            if(etats[groupes[i][j]]->get_ter())
+                ter = true;
+        }
+        vector<int> nvec;
+        nvec.push_back(i);
+        Etat* netat = new Etat(nvec,ini,ter,true);
+        netat->set_old(old);
+        netats.push_back(netat);
+    }
+    for(size_t i = 0; i < groupes.size(); i++)
+    {
+        Etat* ofrom = etats[groupes[i][0]];
+        Etat* from = netats[i];
+        for(size_t c = 0; c < nb_symboles; c++)
+        {
+            int to_int = map[ofrom->get_trs('a' + c)[0]->to];
+            Etat* to = netats[find_etats_groupes(groupes,to_int)];
+            Trs* ntr = new Trs(from,'a' + c,to);
+            ntrs.push_back(ntr);
+            from->add_succ(ntr);
+            to->add_prec(ntr);
+        }
+    }
+    return new Automate(nb_symboles,netats,ntrs,true);
 }
