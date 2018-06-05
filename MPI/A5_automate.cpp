@@ -249,38 +249,38 @@ void Automate::sort()
 
 bool Automate::est_asynchrone() const
 {
-  //  cout << "[TEST ASYNCHRONE]" << endl;
+    cout << "[TEST ASYNCHRONE]" << endl;
     // On cherche simplement si une transition à comme charactère '*'.
     // À partir de là on est sur que l'automate n'est pas synchrone.
     bool res = false;
-  //  cout << "   Transitions epsilon trouvées: " << endl;
+    cout << "   Transitions epsilon trouvées: " << endl;
     for(size_t i = 0; i < nb_transitions; i++)
     {
         if(transitions[i]->tr == '*')
         {
-         //   cout << "      - " << transitions[i]->get_str() << endl;
+            cout << "      - " << transitions[i]->get_str() << endl;
             res = true;
         }
     }
     if(res)
     {
-      //  cout << "   Cet automate est asynchrone" << endl;
+        cout << "   Cet automate est asynchrone" << endl;
     }
     else
     {
-      //  cout << "   Cet automate n'est pas asynchrone" << endl;
+        cout << "   Cet automate n'est pas asynchrone" << endl;
     }
-  //  cout << "[FIN TEST ASYNCHRONE]" << endl;
+    cout << "[FIN TEST ASYNCHRONE]" << endl;
     return res;
 }
 
 bool Automate::est_deterministe() const
 {
-   // cout << "[TEST DETERMINISTE]" << endl;
+    cout << "[TEST DETERMINISTE]" << endl;
     bool res = true;
     if(nb_etatsInitiaux != 1)
     {
-      //  cout << "   Il zero ou plusieurs états initiaux" << endl;
+        cout << "   Il zero ou plusieurs états initiaux" << endl;
         res = false;
     }
     // on teste la transition 0 à part pour le cas asynchrone
@@ -293,21 +293,21 @@ bool Automate::est_deterministe() const
             vector<Trs*> tmp = etats[i]->get_trs(c);
             if(tmp.size() >= 2)
             {
-              //  cout << "   Transitions multiples: " << endl;
+                cout << "   Transitions multiples: " << endl;
                 for(size_t j = 0; j < tmp.size(); j++)
                 {
-                  //  cout << "      - " << tmp[j]->get_str() << endl;
+                    cout << "      - " << tmp[j]->get_str() << endl;
                 }
                 res = false;
             }
         }
 
     }
-  //  if(res)
-      //  cout << "   Cet automate est déterministe" << endl;
-  //  else
-      //  cout << "   Cet automate n'est pas déterministe" << endl;
-   // cout << "[FIN TEST DETERMINISTE]" << endl;
+    if(res)
+        cout << "   Cet automate est déterministe" << endl;
+    else
+        cout << "   Cet automate n'est pas déterministe" << endl;
+    cout << "[FIN TEST DETERMINISTE]" << endl;
     return res;
 }
 
@@ -439,11 +439,11 @@ Automate* Automate::determiniser(bool asynchrone) const
 
 bool Automate::est_deterministe_complet() const
 {
-   // cout << "[TEST DETERMINISTE COMPLET]" << endl;
+    cout << "[TEST DETERMINISTE COMPLET]" << endl;
     bool res = true;
     if(nb_etatsInitiaux != 1)
     {
-     //   cout << "   Il y a zero ou plus d'un état initial" << endl;
+        cout << "   Il y a zero ou plus d'un état initial" << endl;
         res = false;
     }
     for(size_t i = 0; i < etats.size(); i++)
@@ -453,7 +453,7 @@ bool Automate::est_deterministe_complet() const
             vector<Trs*> tmp = etats[i]->get_trs(c);
             if(tmp.size() == 0)
             {
-               // cout << "   Aucune transitions de part de " << etats[i]->get_label() << " via " << c << "." << endl;
+                cout << "   Aucune transitions de part de " << etats[i]->get_label() << " via " << c << "." << endl;
                 res = false;
             }
             if(tmp.size() > 1)
@@ -461,17 +461,17 @@ bool Automate::est_deterministe_complet() const
                 cout << "   Transitions multiples: " << endl;
                 for(size_t j = 0; j < tmp.size(); j++)
                 {
-                  //  cout << "      - " << tmp[j]->get_str() << endl;
+                    cout << "      - " << tmp[j]->get_str() << endl;
                 }
                 res = false;
             }
         }
     }
-   // if(res)
-      //  cout << "   Cet automate est complet" << endl;
-  //  else
-      //  cout << "   Cet automate n'est pas complet" << endl;
-   // cout << "[FIN TEST DETERMINISTE COMPLET]" << endl;
+    if(res)
+        cout << "   Cet automate est complet" << endl;
+    else
+        cout << "   Cet automate n'est pas complet" << endl;
+    cout << "[FIN TEST DETERMINISTE COMPLET]" << endl;
     return res;
 }
 

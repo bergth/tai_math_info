@@ -127,6 +127,12 @@ void Interface::traitement()
         {
             traitements(auts[n]);
         }
+        else if(strs[0] == "estDeterministe")
+            auts[n]->est_deterministe();
+        else if(strs[0] == "estAsynchrone")
+            auts[n]->est_asynchrone();
+        else if(strs[0] == "estDComplet")
+            auts[n]->est_deterministe_complet();
         else
         {
         cout << "Commande inconnue" << endl;
