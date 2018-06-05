@@ -114,9 +114,7 @@ void Interface::traitement()
         }
         else if(strs[0] == "minimiser")
         {
-            auts.push_back(auts[n]->minimiser());
-            orgs.push_back(str);
-            nb++;
+
     
         }
         else if(strs[0] == "reconnaitre")

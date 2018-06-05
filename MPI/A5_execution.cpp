@@ -71,10 +71,9 @@ void traitements(const Automate* A)
     Automate* B = A->determinisation_completion();
     cout << "[AFDC]#########################" << endl << endl;
     B->afficher_table();
-    Automate* X = B->minimiser();
     cout << "[AFDCM]#########################" << endl << endl;
-    X->afficher_table();
-    Automate* C = X->complementariser();
+    B->afficher_table();
+    Automate* C = B->complementariser();
     cout << "[AComp]#########################" << endl << endl;
     C->afficher_table();
     Automate* D = C->standardiser();
@@ -83,6 +82,5 @@ void traitements(const Automate* A)
     delete B;
     delete C;
     delete D;
-    delete X;
     //delete D;
 }

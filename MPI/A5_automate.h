@@ -51,7 +51,6 @@ class Automate
         Automate* copier() const;
         void copier_et_trs(std::vector<Etat*> &vect_etats, std::vector<Trs*> &transi) const;
         Automate* complementariser() const;
-        Automate* minimiser() const;
 
 };
 
