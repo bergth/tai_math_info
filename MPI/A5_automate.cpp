@@ -139,7 +139,7 @@ Automate::~Automate()
 
 void Automate::afficher_etats()
 {
-    cout << "Nombre d'états: " << nb_etats << endl;
+    cout << "Nombre d'etats: " << nb_etats << endl;
     for(size_t i = 0; i < nb_etats; i++)
     {
         cout << i << ": " << etats[i]->get_label() << endl;
@@ -255,7 +255,7 @@ bool Automate::est_asynchrone() const
     // On cherche simplement si une transition à comme charactère '*'.
     // À partir de là on est sur que l'automate n'est pas synchrone.
     bool res = false;
-    cout << "   Transitions epsilon trouvées: " << endl;
+    cout << "   Transitions epsilon trouvees: " << endl;
     for(size_t i = 0; i < nb_transitions; i++)
     {
         if(transitions[i]->tr == '*')
@@ -282,7 +282,7 @@ bool Automate::est_deterministe() const
     bool res = true;
     if(nb_etatsInitiaux != 1)
     {
-        cout << "   Il zero ou plusieurs états initiaux" << endl;
+        cout << "   Il zero ou plusieurs etats initiaux" << endl;
         res = false;
     }
     // on teste la transition 0 à part pour le cas asynchrone
@@ -306,9 +306,9 @@ bool Automate::est_deterministe() const
 
     }
     if(res)
-        cout << "   Cet automate est déterministe" << endl;
+        cout << "   Cet automate est deterministe" << endl;
     else
-        cout << "   Cet automate n'est pas déterministe" << endl;
+        cout << "   Cet automate n'est pas deterministe" << endl;
     cout << "[FIN TEST DETERMINISTE]" << endl;
     return res;
 }
@@ -445,7 +445,7 @@ bool Automate::est_deterministe_complet() const
     bool res = true;
     if(nb_etatsInitiaux != 1)
     {
-        cout << "   Il y a zero ou plus d'un état initial" << endl;
+        cout << "   Il y a zero ou plus d'un etat initial" << endl;
         res = false;
     }
     for(size_t i = 0; i < etats.size(); i++)
@@ -455,7 +455,7 @@ bool Automate::est_deterministe_complet() const
             vector<Trs*> tmp = etats[i]->get_trs(c);
             if(tmp.size() == 0)
             {
-                cout << "   Aucune transitions de part de " << etats[i]->get_label() << " via " << c << "." << endl;
+                cout << "   Aucune transitions ne part de " << etats[i]->get_label() << " via " << c << "." << endl;
                 res = false;
             }
             if(tmp.size() > 1)
@@ -562,7 +562,7 @@ Automate* Automate::minimisation()
     /* Si l'automate était déjà minimal, on le notifie et on renvoie l'automate tel quel*/
     if (partitionNew.size() == nb_etats)
     {
-        cout << "Cet automate était déjà minimal" << endl;
+        cout << "Cet automate etait deja minimal" << endl;
         return this;
     }
     else

@@ -22,7 +22,7 @@ void Interface::start()
     str = "";
     while(true)
     {
-        cout << "[" << nb << "]> "; 
+        cout << "[" << nb << "]> ";
         getline(cin,str);
         //cout << "[[" << str << "]]" << endl;
         if(str == "quitter" || str == "q")
@@ -56,7 +56,7 @@ void Interface::traitement()
     else if(strs[0] == "lire")
     {
         if(strs.size() != 2)
-            cout << "Erreur commande: rentrer numéro automate" << endl;
+            cout << "Erreur commande: rentrer numero automate" << endl;
         else
         {
             int n = u_stoi(strs[1]);
@@ -112,11 +112,18 @@ void Interface::traitement()
             orgs.push_back(str);
             nb++;
         }
+        /*else if(strs[0] == "completer")
+        {
+            auts.push_back(auts[n]->completer());
+            orgs.push_back(str);
+            nb++;
+        }
         else if(strs[0] == "minimiser")
         {
-
-    
-        }
+            auts.push_back(auts[n]->minimisation());
+            orgs.push_back(str);
+            nb++;
+        }*/
         else if(strs[0] == "reconnaitre")
         {
             reconnaissance_de_mots(auts[n]);
