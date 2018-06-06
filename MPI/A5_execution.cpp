@@ -30,9 +30,9 @@ string lire_mot()
 void reconnaissance_de_mots(const Automate* A)
 {
     cout << "Reconnaissance de mots" << endl;
-    cout << "Saisir une série de mots" << endl;
-    cout << "'fin' pour arrêter" << endl;
-    cout << "retour à la ligne pour mot vide" << endl;
+    cout << "Saisir une serie de mots" << endl;
+    cout << "'fin' pour arreter" << endl;
+    cout << "retour a la ligne pour mot vide" << endl;
     string mot = lire_mot();
     while(mot != "fin")
     {
