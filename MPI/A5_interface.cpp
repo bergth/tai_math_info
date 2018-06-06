@@ -232,5 +232,5 @@ void Interface::help()
     cout << "   - EstDComplet [n]: Test si l'automate est deterministre et complet" << endl;
     cout << "(bonus)" << endl;
     cout << "   - dot: Affiche l'automate au format graphviz" << endl;
-    cout << "   - ListerMots: Affiche les 10 premiers mots reconnu (de taille max 6 caracteres)" << endl;
+    cout << "   - ListerMots: Affiche les premiers mots reconnu (de taille max 6 caracteres)" << endl;
 }
