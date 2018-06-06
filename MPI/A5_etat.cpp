@@ -271,9 +271,9 @@ std::vector<Etat*> Etat::get_old() const
 
 Etat* epsilon_cloture(vector<Etat*> et)
 {
-    vector<Etat*> find;
-    queue<Etat*> q;
-    vector<Trs*> tr;
+    vector<Etat*> find; // liste d'états trouvé
+    queue<Etat*> q; // file d'états
+    vector<Trs*> tr; // liste de transition pour récupérer les transitions partant d'un état
     for(size_t i = 0; i < et.size(); i++)
     {
         q.push(et[i]);
@@ -287,8 +287,8 @@ Etat* epsilon_cloture(vector<Etat*> et)
         {
             if(tr[i]->tr == '*')
             {
-                Etat* to = tr[i]->to;
-                if(!find_etat(find,to))
+                Etat* to = tr[i]->to; // on a trouvé un état avec une transition epsilon
+                if(!find_etat(find,to)) // si l'état n'est pas dans la liste, on le rajoute
                 {
                     find.push_back(to);
                     q.push(to);
