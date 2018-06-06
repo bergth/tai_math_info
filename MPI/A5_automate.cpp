@@ -282,7 +282,7 @@ bool Automate::est_deterministe() const
     bool res = true;
     if(nb_etatsInitiaux != 1)
     {
-        cout << "   Il zero ou plusieurs etats initiaux" << endl;
+        cout << "   Il y a zero ou plusieurs etats initiaux" << endl;
         res = false;
     }
     // on teste la transition 0 à part pour le cas asynchrone
