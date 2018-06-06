@@ -583,7 +583,7 @@ Automate* Automate::minimisation()
                     tmpTer = true;
             }   // Et on note s'ils sont initiaux ou terminaux
 
-            netats.push_back(new Etat(tmpLabel, tmpIni, tmpTer));
+            netats.push_back(new Etat(tmpLabel, tmpIni, tmpTer, true));
             netats[i]->set_old(partitionNew[i].getVecEtats());
         }
         /* Puis pour créer les transitions */
