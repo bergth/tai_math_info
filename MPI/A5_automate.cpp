@@ -563,50 +563,47 @@ Automate* Automate::minimisation()
     if (partitionNew.size() == nb_etats)
     {
         cout << "Cet automate etait deja minimal" << endl;
-        return this->copier();
     }
-    else
+
+    vector<Etat*> netats;
+    vector<Trs*> ntrs;
+    for (unsigned int i(0); i < partitionNew.size(); i++)   // on parcourt les ensembles
     {
-        vector<Etat*> netats;
-        vector<Trs*> ntrs;
-        for (unsigned int i(0); i < partitionNew.size(); i++)   // on parcourt les ensembles
-        {
-            vector<int> tmpLabel;
-            bool tmpIni(false), tmpTer(false);
-            tmpLabel.push_back(i);      // On prend comme label le numéro de l'ensemble
+        vector<int> tmpLabel;
+        bool tmpIni(false), tmpTer(false);
+        tmpLabel.push_back(i);      // On prend comme label le numéro de l'ensemble
 
-            for (unsigned int j(0); j < partitionNew[i].getVecEtats().size(); j++)      // On parcourt les états de l'ensemble i
-            {
-                if (partitionNew[i].getVecEtats()[j]->get_ini())
-                    tmpIni = true;
-                if (partitionNew[i].getVecEtats()[j]->get_ter())
-                    tmpTer = true;
-            }   // Et on note s'ils sont initiaux ou terminaux
-
-            netats.push_back(new Etat(tmpLabel, tmpIni, tmpTer, true));
-            netats[i]->set_old(partitionNew[i].getVecEtats());
-        }
-        /* Puis pour créer les transitions */
-        for (unsigned int i(0); i < netats.size(); i++)
+        for (unsigned int j(0); j < partitionNew[i].getVecEtats().size(); j++)      // On parcourt les états de l'ensemble i
         {
-            for (unsigned int j(0); j < nb_symboles; j++)
-            {
-                etatCherche = partitionNew[i].getVecEtats()[0]->get_trs('a' + j)[0]->to;
-                int ensembleCible(-1);
-                for (unsigned int l(0); l < partitionNew.size() && ensembleCible < 0; l++)
-                {
-                    for (unsigned int m(0); m < partitionNew[l].getVecEtats().size() && ensembleCible < 0; m++)
-                    {
-                        if (partitionNew[l].getVecEtats()[m] == etatCherche)
-                            ensembleCible = l;
-                    }
-                }
-                netats[i]->add_succ(new Trs(netats[i], 'a' + j, netats[ensembleCible]));
-                ntrs.push_back(netats[i]->get_succ()[j]);
-            }
-        }
-        return new Automate(nb_symboles, netats, ntrs, true);
+            if (partitionNew[i].getVecEtats()[j]->get_ini())
+                tmpIni = true;
+            if (partitionNew[i].getVecEtats()[j]->get_ter())
+                tmpTer = true;
+        }   // Et on note s'ils sont initiaux ou terminaux
+
+        netats.push_back(new Etat(tmpLabel, tmpIni, tmpTer, true));
+        netats[i]->set_old(partitionNew[i].getVecEtats());
     }
+    /* Puis pour créer les transitions */
+    for (unsigned int i(0); i < netats.size(); i++)
+    {
+        for (unsigned int j(0); j < nb_symboles; j++)
+        {
+            etatCherche = partitionNew[i].getVecEtats()[0]->get_trs('a' + j)[0]->to;
+            int ensembleCible(-1);
+            for (unsigned int l(0); l < partitionNew.size() && ensembleCible < 0; l++)
+            {
+                for (unsigned int m(0); m < partitionNew[l].getVecEtats().size() && ensembleCible < 0; m++)
+                {
+                    if (partitionNew[l].getVecEtats()[m] == etatCherche)
+                        ensembleCible = l;
+                }
+            }
+            netats[i]->add_succ(new Trs(netats[i], 'a' + j, netats[ensembleCible]));
+            ntrs.push_back(netats[i]->get_succ()[j]);
+        }
+    }
+    return new Automate(nb_symboles, netats, ntrs, true);
 }
 
 bool Automate::est_Standard() const
