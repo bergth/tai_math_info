@@ -71,16 +71,17 @@ void traitements(const Automate* A)
     Automate* B = A->determinisation_completion();
     cout << "[AFDC]#########################" << endl << endl;
     B->afficher_table();
+    Automate* X = B->minimisation();
     cout << "[AFDCM]#########################" << endl << endl;
-    B->afficher_table();
-    Automate* C = B->complementariser();
+    X->afficher_table();
+    Automate* C = X->complementariser();
     cout << "[AComp]#########################" << endl << endl;
     C->afficher_table();
     Automate* D = C->standardiser();
     cout << "[ACompStd]#########################" << endl << endl;
     D->afficher_table();
     delete B;
+    delete X;
     delete C;
     delete D;
-    //delete D;
 }

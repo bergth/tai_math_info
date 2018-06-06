@@ -11,6 +11,7 @@ class Interface
         void traitement();
         void clear();
         void lister_automates();
+        void help();
     public:
         Interface();
         ~Interface();

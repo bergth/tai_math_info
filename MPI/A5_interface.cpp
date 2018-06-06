@@ -20,6 +20,7 @@ Interface::~Interface()
 void Interface::start()
 {
     str = "";
+    help();
     while(true)
     {
         cout << "[" << nb << "]> ";
@@ -45,15 +46,22 @@ void Interface::traitement()
 {
     vector<string> strs = string_to_strvec(str);
     //cout << "[" << strs[0] << "]" << endl;
+    if(strs[0] == "help")
+    {
+        help();
+        return;
+    }
     if(strs[0] == "vider")
     {
         clear();
+        return;
     }
-    else if (strs[0] == "lister")
+    else if (strs[0] == "lister" || strs[0] == "lst")
     {
         lister_automates();
+        return;
     }
-    else if(strs[0] == "lire")
+    else if(strs[0] == "lire" || strs[0] == "l")
     {
         if(strs.size() != 2)
             cout << "Erreur commande: rentrer numero automate" << endl;
@@ -102,42 +110,52 @@ void Interface::traitement()
         }
 
 
-        if(strs[0] == "afficher")
+        if(strs[0] == "afficher" || strs[0] == "a")
         {
             auts[n]->afficher_table();
         }
-        else if(strs[0] == "determiniser")
+        else if(strs[0] == "determiniser" || strs[0] == "d")
         {
             auts.push_back(auts[n]->determinisation_completion());
             orgs.push_back(str);
             nb++;
         }
-        /*else if(strs[0] == "completer")
+        else if(strs[0] == "completer" || strs[0] == "c")
         {
             auts.push_back(auts[n]->completer());
             orgs.push_back(str);
             nb++;
         }
-        else if(strs[0] == "minimiser")
+        else if(strs[0] == "minimiser" || strs[0] == "m")
         {
             auts.push_back(auts[n]->minimisation());
             orgs.push_back(str);
             nb++;
-        }*/
-        else if(strs[0] == "reconnaitre")
+        }
+        else if(strs[0] == "reconnaitre" || strs[0] == "r")
         {
             reconnaissance_de_mots(auts[n]);
         }
-        else if(strs[0] == "traitements")
+        else if(strs[0] == "traitements" || strs[0] == "tr")
         {
             traitements(auts[n]);
         }
-        else if(strs[0] == "estDeterministe")
+        else if(strs[0] == "estdeterministe" || strs[0] == "ed")
             auts[n]->est_deterministe();
-        else if(strs[0] == "estAsynchrone")
+        else if(strs[0] == "estasynchrone" || strs[0] == "ea")
             auts[n]->est_asynchrone();
-        else if(strs[0] == "estDComplet")
+        else if(strs[0] == "estdcomplet" || strs[0] == "edc")
             auts[n]->est_deterministe_complet();
+        else if(strs[0] == "dot")
+        {
+            cout << "---------------------" << endl;
+            cout << auts[n]->to_dot();
+            cout << "---------------------" << endl;
+        }
+        else if(strs[0] == "ListerMots" || strs[0] == "lm")
+        {
+            auts[n]->trouver_n_premiers_mots(10,6);
+        }
         else
         {
         cout << "Commande inconnue" << endl;
@@ -154,4 +172,23 @@ void Interface::clear()
     auts.clear();
     orgs.clear();
     nb = 0;
+}
+
+void Interface::help()
+{
+    cout << "Liste des commandes: " << endl;
+    cout << "   - help: Affiche cette aide" << endl;
+    cout << "   - Quitter: quitte le programme" << endl;
+    cout << "   - vider: vider la liste d'automates" << endl;
+    cout << "   - LiSTer: afficher la liste d'automates" << endl;
+    cout << "   - Lire A: Lire un automate. A compris entre 1 et 42" << endl;
+    cout << "[n]: contient le numeros de l'automate. Si non présent: [n] = dernier automate" << endl;
+    cout << "   - Afficher [n]: Affiche la table de transition" << endl;
+    cout << "   - Determiniser [n]: Cree un nouvel automate deterministe" << endl;
+    cout << "   - Minimiser [n]: Cree un nouvel automate  minimal" << endl;
+    cout << "   - Reconnaitre [n]: Lance un test de reconnaissance de mots" << endl;
+    cout << "   - TRaitements [n]: Lance les traitements suivant: AF -> AFDC -> AFDCM -> Acomp -> AcompStd" << endl;
+    cout << "   - EstDeterministe [n]: Test si l'automate est deterministe" << endl;
+    cout << "   - EstAsynchrone [n]: Test si l'automate est Asynchrone" << endl;
+    cout << "   - EstDComplet [n]: Test si l'automate est deterministre et complet" << endl;
 }

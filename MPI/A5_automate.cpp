@@ -563,7 +563,7 @@ Automate* Automate::minimisation()
     if (partitionNew.size() == nb_etats)
     {
         cout << "Cet automate etait deja minimal" << endl;
-        return this;
+        return this->copier();
     }
     else
     {
@@ -783,7 +783,7 @@ Automate* Automate::completer() const
 bool Automate::reconnaitre_mot(string mot) const
 {
     // Si l'automate n'est pas déterministe, on ne peut pas tester le mot facilement sans transformation.
-    if(!est_deterministe())
+    if(!est_deterministe_complet())
     {
         Automate* B = determinisation_completion();
         bool res = B->reconnaitre_mot(mot);
@@ -824,6 +824,7 @@ bool Automate::reconnaitre_mot(string mot) const
 
 void Automate::trouver_n_premiers_mots(size_t n, size_t l)
 {
+    std::cout.setstate(std::ios_base::failbit);
     vector<string> res;
     if(reconnaitre_mot(""))
     {
@@ -842,12 +843,12 @@ void Automate::trouver_n_premiers_mots(size_t n, size_t l)
         for(size_t i = 0; i < nb_symboles; i++)
         {
             string tmp2 = tmp + (char)('a' + i);
-            //cout << "d: " << tmp2 << endl;
             q.push(tmp2);
             if(reconnaitre_mot(tmp2))
                 res.push_back(tmp2);
         }
     }
+    cout.clear();
     for(size_t i = 0; i < res.size(); i++)
     {
         if(res[i] == "")
