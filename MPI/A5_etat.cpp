@@ -172,7 +172,7 @@ void Etat::afficher_etat(int nb_symboles) const
 
 void Etat::afficher_etat_minimisation(int nb_symboles, vector<char> trsSousPart) const
 {
-    cout << "[" << get_label() << "]-----------" << endl;
+    cout << "   [" << get_label() << "]";
     if(ini)
         cout << "I";
     else
@@ -183,14 +183,12 @@ void Etat::afficher_etat_minimisation(int nb_symboles, vector<char> trsSousPart)
     else
         cout << " ";
     cout << endl;
-    cout << "Transitions: " << endl;
     for(char c = 'a' ;  c < (char)('a' + nb_symboles); c++)
     {
         vector<Trs*> tmp = get_trs(c);
-        cout << "   - " << tmp.size() << " transitions en " << c << endl;
         for(size_t i = 0; i < tmp.size(); i++)
         {
-            cout << "       - " << tmp[i]->get_str_minimisation(trsSousPart[c - 'a']) << endl;
+            cout << "          - " << tmp[i]->get_str_minimisation(trsSousPart[c - 'a']) << endl;
         }
     }
     cout << endl;
