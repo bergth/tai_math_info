@@ -128,6 +128,15 @@ void Interface::traitement()
         }
         else if(strs[0] == "minimiser" || strs[0] == "m")
         {
+            if(!auts[n]->est_deterministe_complet())
+            {
+                cout << "Automate non déterministe complet" << endl;
+                cout << "On ajoute un nouvel automate en plus de la completion" << endl;
+                auts.push_back(auts[n]->determinisation_completion());
+                orgs.push_back("determiner "+u_to_string(n));
+                nb++;
+                n++;
+            }
             auts.push_back(auts[n]->minimisation());
             orgs.push_back(str);
             nb++;
@@ -174,7 +183,7 @@ void Interface::traitement()
             cout << auts[n]->to_dot();
             cout << "---------------------" << endl;
         }
-        else if(strs[0] == "ListerMots" || strs[0] == "lm")
+        else if(strs[0] == "listermots" || strs[0] == "lm")
         {
             auts[n]->trouver_n_premiers_mots(10,6);
         }
@@ -198,13 +207,17 @@ void Interface::clear()
 
 void Interface::help()
 {
+    cout << "Les commandes sont à ecrire en minuscule" << endl;
+    cout << "Les majuscules permettent de définir un racourcis" << endl;
+    cout << "[n]: contient le numero de l'automate. Si non present: [n] = dernier automate" << endl;
+    cout << "Exemple: std 5 <=> standardiser 5" << endl;
+    cout << "Standardise le 5éme élement de la liste (liste visible avec la commande lister)" << endl << endl;
     cout << "Liste des commandes: " << endl;
     cout << "   - help: Affiche cette aide" << endl;
     cout << "   - Quitter: quitte le programme" << endl;
     cout << "   - vider: vider la liste d'automates" << endl;
     cout << "   - LiSTer: afficher la liste d'automates" << endl;
     cout << "   - Lire A: Lire un automate. A compris entre 1 et 42" << endl;
-    cout << "[n]: contient le numero de l'automate. Si non present: [n] = dernier automate" << endl;
     cout << "   - Afficher [n]: Affiche la table de transition" << endl;
     cout << "   - Determiniser [n]: Cree un nouvel automate deterministe" << endl;
     cout << "   - Minimiser [n]: Cree un nouvel automate  minimal" << endl;
@@ -217,4 +230,7 @@ void Interface::help()
     cout << "   - EstDeterministe [n]: Test si l'automate est deterministe" << endl;
     cout << "   - EstAsynchrone [n]: Test si l'automate est Asynchrone" << endl;
     cout << "   - EstDComplet [n]: Test si l'automate est deterministre et complet" << endl;
+    cout << "(bonus)" << endl;
+    cout << "   - dot: Affiche l'automate au format graphviz" << endl;
+    cout << "   - ListerMots: Affiche les 10 premiers mots reconnu (de taille max 6 caracteres)" << endl;
 }

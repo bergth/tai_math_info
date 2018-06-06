@@ -479,6 +479,11 @@ bool Automate::est_deterministe_complet() const
 
 Automate* Automate::minimisation()
 {
+    if(!est_deterministe_complet())
+    {
+        cerr << "Automate non deterministe complet" << endl;
+        exit(1);
+    }
     Etat* etatCherche(NULL); // Utile plus tard
     // 2 partitions : une partition i-1 et une partition i, dont on comparera la taille pour la condition d'arrêt
     vector<Ensemble> partitionOld;
