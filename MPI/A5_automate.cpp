@@ -94,8 +94,8 @@ Automate::Automate(const char* fname)
         to = etats[u_stoi(tmp)];
         ajouter_transition(from,c,to);
     }
-   this->sort();
-   this->affichage_minimal = false;
+    this->sort();
+    this->affichage_minimal = false;
 }
 
 Automate::Automate(size_t _nb_symboles, std::vector<Etat*> _etats, std::vector<Trs*> _trs,bool _aminimal)
@@ -490,17 +490,46 @@ Automate* Automate::minimisation()
     for (unsigned int i(0); i < nb_etats; i++)   // on parcourt tous les états
     {
         if (etats[i]->get_ter()) // si l'état i est terminal
-        {   // on le met dans le premier ensemble
+        {
+            // on le met dans le premier ensemble
             partitionNew[0].ajouterEtat(etats[i]);
         }
         else
-        {   // sinon on le met dans le deuxième
+        {
+            // sinon on le met dans le deuxième
             partitionNew[1].ajouterEtat(etats[i]);
         }
     }
 
+    int cmptPart(0);    // Compteur du nombre de partitions
     do
     {
+        cout << endl << endl << "=== PARTITION " << cmptPart << " ===" << endl;
+        for (unsigned int i(0); i < partitionNew.size(); i++)
+        {
+            cout << endl << "--- Ensemble " << partitionNew[i].getLabel() << " ---" << endl;
+            for (unsigned int j(0); j < partitionNew[i].getVecEtats().size(); j++)
+            {
+                vector<char> trsSousPart;
+                for (unsigned int k(0); k < nb_symboles; k++)   // on parcourt les transitions de l'état j
+                {
+                    etatCherche = partitionNew[i].getVecEtats()[j]->get_trs('a' + k)[0]->to;    // on va chercher vers quel état va la transition k
+                    int ensembleCible(-1); // condition d'arrêt + index de l'ensemble cible
+                    for (unsigned int l(0); l < partitionNew.size() && ensembleCible < 0; l++)   // on re-parcourt les ensembles
+                    {
+                        for (unsigned int m(0); m < partitionNew[l].getVecEtats().size() && ensembleCible < 0; m++)
+                        {
+                            // pour trouver dans quel ensemble se trouve l'état cherché
+                            if (partitionNew[l].getVecEtats()[m] == etatCherche)
+                                ensembleCible = l;
+                        }
+                    }
+                    trsSousPart.push_back(partitionNew[ensembleCible].getLabel());
+                }
+                partitionNew[i].getVecEtats()[j]->afficher_etat_minimisation(nb_symboles, trsSousPart);
+            }
+        }
+
         /* partitionOld = partitionNew
         puis on efface partitionNew */
         while (partitionOld.size() != 0)
@@ -536,7 +565,8 @@ Automate* Automate::minimisation()
                         for (unsigned int l(0); l < partitionOld.size() && ensembleCible < 0; l++)   // on re-parcourt les ensembles
                         {
                             for (unsigned int m(0); m < partitionOld[l].getVecEtats().size() && ensembleCible < 0; m++)
-                            {   // pour trouver dans quel ensemble se trouve l'état cherché
+                            {
+                                // pour trouver dans quel ensemble se trouve l'état cherché
                                 if (partitionOld[l].getVecEtats()[m] == etatCherche)
                                     ensembleCible = l;
                             }
@@ -556,7 +586,9 @@ Automate* Automate::minimisation()
                 }
             }
         }
-    } while (partitionNew.size() != partitionOld.size());   // Tant qu'on a pas trouvé une partition identique à la partition précédente
+        cmptPart++;
+    }
+    while (partitionNew.size() != partitionOld.size());     // Tant qu'on a pas trouvé une partition identique à la partition précédente
 
 
     /* Si l'automate était déjà minimal, on le notifie et on renvoie l'automate tel quel*/
@@ -645,7 +677,7 @@ Automate* Automate::standardiser() const
     vector<Trs*> ntrs;
     copier_et_trs(netats,ntrs);
     vector<Etat*> oldInitiaux;
-    for(size_t i = 0;i < netats.size(); i++)
+    for(size_t i = 0; i < netats.size(); i++)
     {
         if(netats[i]->get_ini())
             oldInitiaux.push_back(netats[i]);
@@ -671,7 +703,7 @@ Automate* Automate::standardiser() const
 
 void Automate::copier_et_trs(std::vector<Etat*> &vect_etats, std::vector<Trs*> &transi) const
 {
-        // vecteur des nouveaux états
+    // vecteur des nouveaux états
     vector<Etat*> netats;
     // vecteur des nouvelles transitions
     vector<Trs*> ntrs;
@@ -692,7 +724,7 @@ void Automate::copier_et_trs(std::vector<Etat*> &vect_etats, std::vector<Trs*> &
         }
         tmp = etats[i]->get_succ(); // on récupère les transitions vers les successeurs
         char ctmp = 0;
-         // on passe sur toutes les transitions
+        // on passe sur toutes les transitions
         for(size_t j = 0; j < tmp.size(); j++)
         {
             Etat* to;

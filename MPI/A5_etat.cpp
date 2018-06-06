@@ -79,6 +79,11 @@ string Trs::get_str() const
     return from->get_label() + " -> " + tr + " -> " + to->get_label();
 }
 
+string Trs::get_str_minimisation(const char c) const
+{
+    return from->get_label() + " -> " + tr + " -> " + to->get_label() + " = " + c;
+}
+
 Etat::Etat(vector<int> _labels, bool _ini, bool _ter, bool _aminimal): labels(_labels), ini(_ini), ter(_ter), aminimal(_aminimal) {}
 
 
@@ -160,6 +165,32 @@ void Etat::afficher_etat(int nb_symboles) const
         for(size_t i = 0; i < tmp.size(); i++)
         {
             cout << "       - " << tmp[i]->get_str() << endl;
+        }
+    }
+    cout << endl;
+}
+
+void Etat::afficher_etat_minimisation(int nb_symboles, vector<char> trsSousPart) const
+{
+    cout << "[" << get_label() << "]-----------" << endl;
+    if(ini)
+        cout << "I";
+    else
+        cout << " ";
+
+    if(ter)
+        cout << "T";
+    else
+        cout << " ";
+    cout << endl;
+    cout << "Transitions: " << endl;
+    for(char c = 'a' ;  c < (char)('a' + nb_symboles); c++)
+    {
+        vector<Trs*> tmp = get_trs(c);
+        cout << "   - " << tmp.size() << " transitions en " << c << endl;
+        for(size_t i = 0; i < tmp.size(); i++)
+        {
+            cout << "       - " << tmp[i]->get_str_minimisation(trsSousPart[c - 'a']) << endl;
         }
     }
     cout << endl;
@@ -340,6 +371,6 @@ std::string Etat::get_name_old()
         {
             res += ", ";
         }
-    } 
+    }
     return res;
 }

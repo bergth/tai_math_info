@@ -99,13 +99,13 @@ void Interface::traitement()
             n = u_stoi(strs[1]);
             if(n >= auts.size())
             {
-                cout << "Erreur commante: mauvais numéros de liste" << endl;
+                cout << "Erreur commante: mauvais numero de liste" << endl;
                 return;
             }
         }
         else
         {
-            cout << "Erreur commande: rentrer numéro automate dans la liste (cf lister)" << endl;
+            cout << "Erreur commande: rentrer numero automate dans la liste (cf lister)" << endl;
             return;
         }
 
@@ -204,7 +204,7 @@ void Interface::help()
     cout << "   - vider: vider la liste d'automates" << endl;
     cout << "   - LiSTer: afficher la liste d'automates" << endl;
     cout << "   - Lire A: Lire un automate. A compris entre 1 et 42" << endl;
-    cout << "[n]: contient le numeros de l'automate. Si non présent: [n] = dernier automate" << endl;
+    cout << "[n]: contient le numero de l'automate. Si non present: [n] = dernier automate" << endl;
     cout << "   - Afficher [n]: Affiche la table de transition" << endl;
     cout << "   - Determiniser [n]: Cree un nouvel automate deterministe" << endl;
     cout << "   - Minimiser [n]: Cree un nouvel automate  minimal" << endl;

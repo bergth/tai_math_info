@@ -21,6 +21,7 @@ class Trs
         int operator>(const Trs& right) const;
         int operator>=(const Trs& right) const;
         std::string get_str() const;
+        std::string get_str_minimisation(const char c) const;
 };
 
 int compare_trs_pt(const Trs* a, const Trs* b);
@@ -44,6 +45,7 @@ class Etat
         std::string get_label() const;
         std::vector<int> get_vect_label() const;
         void afficher_etat(int nb_symboles) const;
+        void afficher_etat_minimisation(int nb_symboles, std::vector<char> trsSousPart) const;
         void add_prec(Trs* _prec);
         void add_succ(Trs* _succ);
         void set_old(std::vector<Etat*> ets);
