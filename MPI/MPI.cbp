@@ -34,8 +34,12 @@
 		</Compiler>
 		<Unit filename="A5_automate.cpp" />
 		<Unit filename="A5_automate.h" />
+		<Unit filename="A5_ensemble.cpp" />
+		<Unit filename="A5_ensemble.h" />
 		<Unit filename="A5_etat.cpp" />
 		<Unit filename="A5_etat.h" />
+		<Unit filename="A5_execution.cpp" />
+		<Unit filename="A5_execution.hpp" />
 		<Unit filename="A5_main.cpp" />
 		<Unit filename="A5_utile.cpp" />
 		<Unit filename="A5_utile.h" />

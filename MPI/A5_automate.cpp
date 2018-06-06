@@ -1,10 +1,13 @@
 #include <fstream>
 #include <iostream>
-#include<cstdlib>
-#include<algorithm>
-#include<queue>
+#include <cstdlib>
+#include <algorithm>
+#include <queue>
+#include <vector>
+#include <map>
 #include "A5_automate.h"
 #include "A5_utile.h"
+#include "A5_ensemble.h"
 
 using namespace std;
 
@@ -463,6 +466,138 @@ bool Automate::est_deterministe_complet() const
         cout << "   Cet automate n'est pas complet" << endl;
     cout << "[FIN TEST DETERMINISTE COMPLET]" << endl;
     return res;
+}
+
+Automate* Automate::minimisation()
+{
+    Etat* etatCherche(NULL); // Utile plus tard
+    // 2 partitions : une partition i-1 et une partition i, dont on comparera la taille pour la condition d'arrêt
+    vector<Ensemble> partitionOld;
+    vector<Ensemble> partitionNew;
+
+    /* Première partition entre les états terminaux et non-terminaux */
+    partitionNew.push_back(Ensemble(0));
+    partitionNew.push_back(Ensemble(1));
+    for (unsigned int i(0); i < nb_etats; i++)   // on parcourt tous les états
+    {
+        if (etats[i]->get_ter()) // si l'état i est terminal
+        {   // on le met dans le premier ensemble
+            partitionNew[0].ajouterEtat(etats[i]);
+        }
+        else
+        {   // sinon on le met dans le deuxième
+            partitionNew[1].ajouterEtat(etats[i]);
+        }
+    }
+
+    do
+    {
+        /* partitionOld = partitionNew
+        puis on efface partitionNew */
+        while (partitionOld.size() != 0)
+        {
+            partitionOld.pop_back();
+        }
+        for (unsigned int i(0); i < partitionNew.size(); i++)
+        {
+            partitionOld.push_back(partitionNew[i]);
+        }
+        while (partitionNew.size() != 0)
+        {
+            partitionNew.pop_back();
+        }
+
+
+        for (unsigned int i(0); i < partitionOld.size(); i++)   // On parcourt les ensembles
+        {
+            if (partitionOld[i].getSize() == 1)     // si l'ensemble ne contient qu'un seul état, on peut directement le copier dans la nouvelle partition
+                partitionNew.push_back(Ensemble(partitionOld[i], partitionNew.size()));
+            else
+            {
+                map<string, vector<Etat*> >::iterator itSep;
+                map<string, vector<Etat*> > separation;
+                for (unsigned int j(0); j < partitionOld[i].getVecEtats().size(); j++)  // on parcourt les états de l'ensemble i
+                {
+                    string tempStr("");
+                    for (unsigned int k(0); k < nb_symboles; k++)   // on parcourt les transitions de l'état j
+                    {
+                        /* Etat* etatCherche(NULL); */
+                        etatCherche = partitionOld[i].getVecEtats()[j]->get_trs('a' + k)[0]->to;    // on va chercher vers quel état va la transition k
+                        int ensembleCible(-1); // condition d'arrêt + index de l'ensemble cible
+                        for (unsigned int l(0); l < partitionOld.size() && ensembleCible < 0; l++)   // on re-parcourt les ensembles
+                        {
+                            for (unsigned int m(0); m < partitionOld[l].getVecEtats().size() && ensembleCible < 0; m++)
+                            {   // pour trouver dans quel ensemble se trouve l'état cherché
+                                if (partitionOld[l].getVecEtats()[m] == etatCherche)
+                                    ensembleCible = l;
+                            }
+                        }
+                        tempStr += partitionOld[ensembleCible].getLabel();  // On a donc une chaîne du type : BBD (avec B et D des ensembles)
+                    }
+                    separation[tempStr].push_back(partitionOld[i].getVecEtats()[j]);    // Et on ajoute l'état correspondant à la bonne chaîne dans un map
+                }
+                for (itSep = separation.begin(); itSep != separation.end(); itSep++)    // On parcourt la map
+                {
+                    Ensemble tempEns(0);
+                    for (unsigned int n(0); n < itSep->second.size(); n++)
+                    {
+                        tempEns.ajouterEtat(itSep->second[n]);
+                    }
+                    partitionNew.push_back(Ensemble(tempEns, partitionNew.size()));  // On ajoute un ensemble pour chaque separation
+                }
+            }
+        }
+    } while (partitionNew.size() != partitionOld.size());   // Tant qu'on a pas trouvé une partition identique à la partition précédente
+
+
+    /* Si l'automate était déjà minimal, on le notifie et on renvoie l'automate tel quel*/
+    if (partitionNew.size() == nb_etats)
+    {
+        cout << "Cet automate était déjà minimal" << endl;
+        return this;
+    }
+    else
+    {
+        vector<Etat*> netats;
+        vector<Trs*> ntrs;
+        for (unsigned int i(0); i < partitionNew.size(); i++)   // on parcourt les ensembles
+        {
+            vector<int> tmpLabel;
+            bool tmpIni(false), tmpTer(false);
+            tmpLabel.push_back(i);      // On prend comme label le numéro de l'ensemble
+
+            for (unsigned int j(0); j < partitionNew[i].getVecEtats().size(); j++)      // On parcourt les états de l'ensemble i
+            {
+                if (partitionNew[i].getVecEtats()[j]->get_ini())
+                    tmpIni = true;
+                if (partitionNew[i].getVecEtats()[j]->get_ter())
+                    tmpTer = true;
+            }   // Et on note s'ils sont initiaux ou terminaux
+
+            netats.push_back(new Etat(tmpLabel, tmpIni, tmpTer));
+            netats[i]->set_old(partitionNew[i].getVecEtats());
+        }
+        /* Puis pour créer les transitions */
+        for (unsigned int i(0); i < netats.size(); i++)
+        {
+            for (unsigned int j(0); j < nb_symboles; j++)
+            {
+                etatCherche = partitionNew[i].getVecEtats()[0]->get_trs('a' + j)[0]->to;
+                int ensembleCible(-1);
+                for (unsigned int l(0); l < partitionNew.size() && ensembleCible < 0; l++)
+                {
+                    for (unsigned int m(0); m < partitionNew[l].getVecEtats().size() && ensembleCible < 0; m++)
+                    {
+                        if (partitionNew[l].getVecEtats()[m] == etatCherche)
+                            ensembleCible = l;
+                    }
+                }
+                netats[i]->add_succ(new Trs(netats[i], 'a' + j, netats[ensembleCible]));
+                ntrs.push_back(netats[i]->get_succ()[j]);
+            }
+        }
+        return new Automate(nb_symboles, netats, ntrs);
+    }
 }
 
 bool Automate::est_Standard() const

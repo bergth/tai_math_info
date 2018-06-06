@@ -38,6 +38,7 @@ class Automate
         Automate* determinisation_completion() const;
         Automate* determiniser(bool asynchrone) const;
         bool est_deterministe_complet() const;
+        Automate* minimisation();
         bool est_Standard() const;
         Automate* completer() const;
         Automate* standardiser() const;
