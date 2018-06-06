@@ -132,6 +132,18 @@ void Interface::traitement()
             orgs.push_back(str);
             nb++;
         }
+        else if(strs[0] == "complementer" || strs[0] == "cm")
+        {
+            auts.push_back(auts[n]->complementariser());
+            orgs.push_back(str);
+            nb++;
+        }
+        else if(strs[0] == "standardiser" || strs[0] == "std")
+        {
+            auts.push_back(auts[n]->standardiser());
+            orgs.push_back(str);
+            nb++;
+        }
         else if(strs[0] == "reconnaitre" || strs[0] == "r")
         {
             reconnaissance_de_mots(auts[n]);
@@ -146,6 +158,16 @@ void Interface::traitement()
             auts[n]->est_asynchrone();
         else if(strs[0] == "estdcomplet" || strs[0] == "edc")
             auts[n]->est_deterministe_complet();
+        else if(strs[0] == "eststandard" || strs[0] == "es")
+            auts[n]->est_Standard();
+        else if(strs[0] == "ReconnaitreComp" || strs[0] == "rc")
+        {
+            language_complementaire(auts[n]);
+        }
+        else if(strs[0] == "testerStand" || strs[0] == "ts")
+        {
+            test_standard(auts[n]);
+        }
         else if(strs[0] == "dot")
         {
             cout << "---------------------" << endl;
@@ -186,7 +208,10 @@ void Interface::help()
     cout << "   - Afficher [n]: Affiche la table de transition" << endl;
     cout << "   - Determiniser [n]: Cree un nouvel automate deterministe" << endl;
     cout << "   - Minimiser [n]: Cree un nouvel automate  minimal" << endl;
+    cout << "   - CompleMenter [n]: Cree un nouvel automate complementaire" << endl;
+    cout << "   - STanDardiser [n]: Cree un nouvel automate standard" << endl;
     cout << "   - Reconnaitre [n]: Lance un test de reconnaissance de mots" << endl;
+    cout << "   - ReconnaitreComp [n]: Lance un test de reconnaissance de mots sur l'automate complementaire" << endl;
     cout << "   - TRaitements [n]: Lance les traitements suivant: AF -> AFDC -> AFDCM -> Acomp -> AcompStd" << endl;
     cout << "   - EstDeterministe [n]: Test si l'automate est deterministe" << endl;
     cout << "   - EstAsynchrone [n]: Test si l'automate est Asynchrone" << endl;

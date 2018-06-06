@@ -611,19 +611,37 @@ Automate* Automate::minimisation()
 
 bool Automate::est_Standard() const
 {
+    cout << "[test standard]" << endl;
+    bool res = true;
     if(nb_etatsInitiaux != 1)
-        return false;
+    {
+        cout << "   plus d'un état initial" << endl;
+        res = false;
+    }
     for(size_t i = 0; i < nb_transitions; i++)
     {
         if(transitions[i]->to == etatsInitiaux[0])
-            return false;
+        {
+            cout << "   Etat retournant sur l'entree: " << endl;
+            cout << "   " << transitions[i]->get_str() << endl;
+            res = false;
+        }
     }
-    return true;
+    if(res)
+        cout << "   Cet automate est standard" << endl;
+    else
+        cout << "   Cet automate est pas standard" << endl;
+    cout << "[fin test standard]" << endl;
+    return res;
 
 }
 
 Automate* Automate::standardiser() const
 {
+    if(est_Standard())
+    {
+        return copier();
+    }
     // vecteur des nouveaux états
     vector<Etat*> netats;
     // vecteur des nouvelles transitions
@@ -782,6 +800,7 @@ Automate* Automate::completer() const
 
 bool Automate::reconnaitre_mot(string mot) const
 {
+    std::cout.setstate(std::ios_base::failbit);
     // Si l'automate n'est pas déterministe, on ne peut pas tester le mot facilement sans transformation.
     if(!est_deterministe_complet())
     {
@@ -790,6 +809,7 @@ bool Automate::reconnaitre_mot(string mot) const
         delete B;
         return res;
     }
+    cout.clear();
     // On se place sur le seul état initial (car déterministe)
     Etat* curr = etatsInitiaux[0];
     // on parcours tout le mot
@@ -824,7 +844,6 @@ bool Automate::reconnaitre_mot(string mot) const
 
 void Automate::trouver_n_premiers_mots(size_t n, size_t l)
 {
-    std::cout.setstate(std::ios_base::failbit);
     vector<string> res;
     if(reconnaitre_mot(""))
     {
@@ -848,7 +867,6 @@ void Automate::trouver_n_premiers_mots(size_t n, size_t l)
                 res.push_back(tmp2);
         }
     }
-    cout.clear();
     for(size_t i = 0; i < res.size(); i++)
     {
         if(res[i] == "")

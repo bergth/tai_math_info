@@ -57,7 +57,6 @@ void language_complementaire(const Automate* A)
         aut = A->completer();
     }
     comp = aut->complementariser();
-    //comp->afficher_table();
     reconnaissance_de_mots(comp);
     if(!(A->est_deterministe_complet()))
         delete aut;
@@ -84,4 +83,12 @@ void traitements(const Automate* A)
     delete X;
     delete C;
     delete D;
+}
+
+void test_standard(const Automate* A)
+{
+    Automate* stand = A->standardiser();
+    stand->afficher_table();
+    reconnaissance_de_mots(stand);
+    delete stand;
 }
