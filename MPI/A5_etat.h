@@ -35,10 +35,11 @@ class Etat
         bool ter;
         std::vector<Trs*> prec;
         std::vector<Trs*> succ;
+        bool aminimal;
     public:
         int operator<(const Etat& right) const;
         int operator==(const Etat& right) const;
-        Etat(std::vector<int> _labels, bool _ini, bool _ter);
+        Etat(std::vector<int> _labels, bool _ini, bool _ter, bool _aminimal);
         //~Etat();
         std::string get_label() const;
         std::vector<int> get_vect_label() const;
@@ -46,6 +47,7 @@ class Etat
         void add_prec(Trs* _prec);
         void add_succ(Trs* _succ);
         void set_old(std::vector<Etat*> ets);
+        std::string get_name_old();
         std::vector<Etat*> get_old() const;
         std::vector<Trs*> get_succ() const;
         std::vector<Trs*> get_prec() const;

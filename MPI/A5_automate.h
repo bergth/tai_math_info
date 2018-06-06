@@ -3,6 +3,10 @@
 #include <vector>
 #include "A5_etat.h"
 
+
+
+
+
 class Automate
 {
 
@@ -23,10 +27,11 @@ class Automate
         Trs* lire_grp_etats(std::string str);
         Etat* ajouter_etat(std::vector<int> &labels, bool ini, bool ter);
         Trs* ajouter_transition(Etat* from, char c, Etat* to);
+        bool affichage_minimal;
     public:
         // Constructeur prend en paramètre le fichier contenant les données de l'automate à construire
         Automate(const char* file);
-        Automate(size_t _nb_symboles, std::vector<Etat*> _etats, std::vector<Trs*> _trs);
+        Automate(size_t _nb_symboles, std::vector<Etat*> _etats, std::vector<Trs*> _trs,bool _aminimal);
         ~Automate();
         void afficher_etats();
         void afficher_transitions();

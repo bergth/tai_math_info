@@ -32,7 +32,7 @@ Automate::Automate(const char* fname)
     {
         vector<int> nvec;
         nvec.push_back((int)(i));
-        Etat* tmp = new Etat(nvec,false,false);
+        Etat* tmp = new Etat(nvec,false,false,false);
         etats.push_back(tmp);
     }
 
@@ -95,9 +95,10 @@ Automate::Automate(const char* fname)
         ajouter_transition(from,c,to);
     }
    this->sort();
+   this->affichage_minimal = false;
 }
 
-Automate::Automate(size_t _nb_symboles, std::vector<Etat*> _etats, std::vector<Trs*> _trs)
+Automate::Automate(size_t _nb_symboles, std::vector<Etat*> _etats, std::vector<Trs*> _trs,bool _aminimal)
 {
     nb_symboles = _nb_symboles;
     nb_etats = _etats.size();
@@ -120,6 +121,7 @@ Automate::Automate(size_t _nb_symboles, std::vector<Etat*> _etats, std::vector<T
         }
     }
     this->sort();
+    this->affichage_minimal = _aminimal;
 }
 
 Automate::~Automate()
@@ -156,6 +158,13 @@ void Automate::afficher_transitions()
 
 void Automate::afficher_table() const
 {
+    if(affichage_minimal)
+    {
+        for(size_t i = 0; i < etats.size(); i++)
+        {
+            cout << etats[i]->get_label() << " <-> " << etats[i]->get_name_old() << endl;
+        }
+    }
     cout << "alphabet: ";
     for(size_t i = 0; i < nb_symboles; i++)
     {
@@ -170,7 +179,7 @@ void Automate::afficher_table() const
 
 Etat* Automate::ajouter_etat(vector<int> &labels, bool ini, bool ter)
 {
-    Etat* netat = new Etat(labels, ini, ter);
+    Etat* netat = new Etat(labels, ini, ter,false);
     etats.push_back(netat);
     return netat;
 }
@@ -338,7 +347,7 @@ Automate* Automate::determiniser(bool asynchrone) const
     // on place un état puit (avec le nom '-1')
     vector<int> nvec;
     nvec.push_back(-1);
-    Etat* puit = new Etat(nvec,false,false);
+    Etat* puit = new Etat(nvec,false,false,false);
     //netats.push_back(puit);
     // Cette file est utilisée pour la déterminisation
     // elle permet d'ajouter dans une sorte de file d'attente
@@ -426,7 +435,7 @@ Automate* Automate::determiniser(bool asynchrone) const
     {
         delete puit;
     }
-    return new Automate(nb_symboles,netats,ntrs);
+    return new Automate(nb_symboles,netats,ntrs,false);
 }
 
 
@@ -596,7 +605,7 @@ Automate* Automate::minimisation()
                 ntrs.push_back(netats[i]->get_succ()[j]);
             }
         }
-        return new Automate(nb_symboles, netats, ntrs);
+        return new Automate(nb_symboles, netats, ntrs, true);
     }
 }
 
@@ -628,7 +637,7 @@ Automate* Automate::standardiser() const
     }
     vector<int> nvec;
     nvec.push_back(-2);
-    Etat* ninit = new Etat(nvec,true,false);
+    Etat* ninit = new Etat(nvec,true,false,false);
     netats.push_back(ninit);
     for(size_t i = 0; i < oldInitiaux.size(); i++)
     {
@@ -642,7 +651,7 @@ Automate* Automate::standardiser() const
         }
         oldInitiaux[i]->set_ini(false); //On supprime aux entrees leur statut d'entree
     }
-    return new Automate(nb_symboles, netats, ntrs);
+    return new Automate(nb_symboles, netats, ntrs,false);
 }
 
 void Automate::copier_et_trs(std::vector<Etat*> &vect_etats, std::vector<Trs*> &transi) const
@@ -663,7 +672,7 @@ void Automate::copier_et_trs(std::vector<Etat*> &vect_etats, std::vector<Trs*> &
         Etat* from = find_etat(netats,etats[i]);
         if(!from) // si non, on créer un nouvel état "copie" et on l'ajoute dans le vecteur
         {
-            from = new Etat(etats[i]->get_vect_label(),etats[i]->get_ini(),etats[i]->get_ter());
+            from = new Etat(etats[i]->get_vect_label(),etats[i]->get_ini(),etats[i]->get_ter(),false);
             netats.push_back(from);
         }
         tmp = etats[i]->get_succ(); // on récupère les transitions vers les successeurs
@@ -678,7 +687,7 @@ void Automate::copier_et_trs(std::vector<Etat*> &vect_etats, std::vector<Trs*> &
             to = find_etat(netats,tmp[j]->to); // on cherche l'état de la destination de la transition
             if(!to) // si il n'existe pas dans le vecteur, on le créé et on l'ajoute
             {
-                to = new Etat(tmp[j]->to->get_vect_label(),tmp[j]->to->get_ini(),tmp[j]->to->get_ter());
+                to = new Etat(tmp[j]->to->get_vect_label(),tmp[j]->to->get_ini(),tmp[j]->to->get_ter(),false);
                 netats.push_back(to);
             }
             // on créé la transition et on l'ajoute là ou il faut
@@ -700,7 +709,7 @@ Automate* Automate::copier() const
     vector<Etat*> etats;
     vector<Trs*> transi;
     copier_et_trs(etats,transi);
-    return new Automate(nb_symboles,etats,transi);
+    return new Automate(nb_symboles,etats,transi,this->affichage_minimal);
 }
 
 Automate* Automate::completer() const
@@ -714,7 +723,7 @@ Automate* Automate::completer() const
     // création et ajout d'un vecteur puit dans netats
     vector<int> nvec;
     nvec.push_back(-1);
-    Etat* puit = new Etat(nvec,false,false);
+    Etat* puit = new Etat(nvec,false,false,false);
     netats.push_back(puit);
     // on ajoute toutes les transitions allant du puit vers le puit
     for(size_t i = 0; i < nb_symboles; i++)
@@ -732,7 +741,7 @@ Automate* Automate::completer() const
         Etat* from = find_etat(netats,etats[i]);
         if(!from) // si non, on créer un nouvel état "copie" et on l'ajoute dans le vecteur
         {
-            from = new Etat(etats[i]->get_vect_label(),etats[i]->get_ini(),etats[i]->get_ter());
+            from = new Etat(etats[i]->get_vect_label(),etats[i]->get_ini(),etats[i]->get_ter(),false);
             netats.push_back(from);
         }
         tmp = etats[i]->get_succ(); // on récupère les transitions vers les successeurs
@@ -754,7 +763,7 @@ Automate* Automate::completer() const
                 to = find_etat(netats,tmp[j]->to); // on cherche l'état de la destination de la transition
                 if(!to) // si il n'existe pas dans le vecteur, on le créé et on l'ajoute
                 {
-                    to = new Etat(tmp[j]->to->get_vect_label(),tmp[j]->to->get_ini(),tmp[j]->to->get_ter());
+                    to = new Etat(tmp[j]->to->get_vect_label(),tmp[j]->to->get_ini(),tmp[j]->to->get_ter(),false);
                     netats.push_back(to);
                 }
                 j++; // on a passé une transition, on incrémente j.
@@ -768,7 +777,7 @@ Automate* Automate::completer() const
         }
     }
     // on créé un nouvel automate à partir du vecteur de nouveaux états et de nouvelles transitions
-    return new Automate(nb_symboles,netats,ntrs);
+    return new Automate(nb_symboles,netats,ntrs,false);
 }
 
 bool Automate::reconnaitre_mot(string mot) const
@@ -801,7 +810,7 @@ bool Automate::reconnaitre_mot(string mot) const
         // si on a pas trouvé de transition correspondant à la lettre courante, le mot n'est pas reconnu
         if(curr == NULL)
         {
-            cout << "Caractère qui empêche la reconnaissance de l'automate: " << mot[i] << endl;
+            //cout << "Caractère qui empêche la reconnaissance de l'automate: " << mot[i] << endl;
             return false;
         }
     }
@@ -883,8 +892,26 @@ Automate* Automate::complementariser() const
 
     }
 
-    Automate* result = new Automate(nb_symboles,tmps_eta,tmp_transition);
+    Automate* result = new Automate(nb_symboles,tmps_eta,tmp_transition,false);
 
     return result;
 
 }
+
+
+int find_etats_groupes(const vector< vector < int > > vect, int val)
+{
+    for(size_t i = 0; i < vect.size(); i++)
+    {
+        for(size_t j = 0; j < vect[i].size(); j++)
+        {
+            if(vect[i][j] == val)
+            {
+                return i;
+            }
+        }
+    }
+    cerr << "error find" << endl;
+    exit(1);
+}
+

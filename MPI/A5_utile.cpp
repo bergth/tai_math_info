@@ -86,3 +86,24 @@ int u_stoi(const std::string& str)
     }
     return res;
 }
+
+std::vector<string> string_to_strvec(std::string str)
+{
+    vector<string> nvec;
+    string str_tmp = "";
+    for(size_t i = 0; i < str.size(); i++)
+    {
+        if(str[i] == ' ')
+        {
+            nvec.push_back(str_tmp);
+            str_tmp = "";
+        }
+        else
+        {
+            str_tmp += str[i];
+        }
+    }
+    if(str_tmp != "" && str_tmp != " ")
+        nvec.push_back(str_tmp);
+    return nvec;
+}

@@ -57,29 +57,30 @@ void language_complementaire(const Automate* A)
         aut = A->completer();
     }
     comp = aut->complementariser();
-    comp->afficher_table();
+    //comp->afficher_table();
     reconnaissance_de_mots(comp);
     if(!(A->est_deterministe_complet()))
         delete aut;
     delete comp;
 }
 
-void traitements(size_t n)
+void traitements(const Automate* A)
 {
-    Automate* A = lire_automate(n);
-    cout << "[AF]--------------------------" << endl << endl;
+    cout << "[AF]#########################" << endl << endl;
     A->afficher_table();
     Automate* B = A->determinisation_completion();
-    cout << "[AFDC]------------------------" << endl << endl;
+    cout << "[AFDC]#########################" << endl << endl;
+    B->afficher_table();
+    cout << "[AFDCM]#########################" << endl << endl;
     B->afficher_table();
     Automate* C = B->complementariser();
-    cout << "[AComp]-----------------------" << endl << endl;
+    cout << "[AComp]#########################" << endl << endl;
     C->afficher_table();
     Automate* D = C->standardiser();
-    cout << "[ACompStd]--------------------" << endl << endl;
+    cout << "[ACompStd]#########################" << endl << endl;
     D->afficher_table();
-    delete A;
     delete B;
     delete C;
     delete D;
+    //delete D;
 }

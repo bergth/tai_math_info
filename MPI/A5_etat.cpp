@@ -79,7 +79,7 @@ string Trs::get_str() const
     return from->get_label() + " -> " + tr + " -> " + to->get_label();
 }
 
-Etat::Etat(vector<int> _labels, bool _ini, bool _ter): labels(_labels), ini(_ini), ter(_ter) {}
+Etat::Etat(vector<int> _labels, bool _ini, bool _ter, bool _aminimal): labels(_labels), ini(_ini), ter(_ter), aminimal(_aminimal) {}
 
 
 
@@ -101,7 +101,15 @@ int compare_etat_pt(const Etat* a, const Etat* b)
 
 string Etat::get_label() const
 {
-    string str = "{";
+    string str = "";
+    if(aminimal)
+    {
+        str += "[";
+    }
+    else
+    {
+        str += "{";
+    }
     for(size_t i = 0; i < labels.size(); i++)
     {
         if(labels[i] == -1)
@@ -121,8 +129,14 @@ string Etat::get_label() const
             str += ", ";
         }
     }
-    str += "}";
-    return str;
+    if(aminimal)
+    {
+        str += "]";
+    }
+    else
+    {
+        str += "}";
+    }    return str;
 }
 
 void Etat::afficher_etat(int nb_symboles) const
@@ -282,7 +296,7 @@ Etat* contact_name_etat(vector<Etat*> ets)
 
     if(labels.size() == 0)
         return NULL;
-    Etat* res = new Etat(labels,ini,ter);
+    Etat* res = new Etat(labels,ini,ter,false);
     res->set_old(ets);
 
     return res;
@@ -316,3 +330,16 @@ Etat* find_etat(const vector<Etat*>& ets, Etat* et)
         return NULL;
 }
 
+std::string Etat::get_name_old()
+{
+    string res = "";
+    for(size_t i = 0; i < old.size(); i++)
+    {
+        res += old[i]->get_label();
+        if(i != old.size() - 1)
+        {
+            res += ", ";
+        }
+    } 
+    return res;
+}
