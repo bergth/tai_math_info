@@ -160,11 +160,11 @@ void Interface::traitement()
             auts[n]->est_deterministe_complet();
         else if(strs[0] == "eststandard" || strs[0] == "es")
             auts[n]->est_Standard();
-        else if(strs[0] == "ReconnaitreComp" || strs[0] == "rc")
+        else if(strs[0] == "recocomp" || strs[0] == "rc")
         {
             language_complementaire(auts[n]);
         }
-        else if(strs[0] == "testerStand" || strs[0] == "ts")
+        else if(strs[0] == "teststand" || strs[0] == "ts")
         {
             test_standard(auts[n]);
         }
@@ -210,8 +210,9 @@ void Interface::help()
     cout << "   - Minimiser [n]: Cree un nouvel automate  minimal" << endl;
     cout << "   - CompleMenter [n]: Cree un nouvel automate complementaire" << endl;
     cout << "   - STanDardiser [n]: Cree un nouvel automate standard" << endl;
+    cout << "   - TestStand [n]: lancer le test de standardisation" << endl;
     cout << "   - Reconnaitre [n]: Lance un test de reconnaissance de mots" << endl;
-    cout << "   - ReconnaitreComp [n]: Lance un test de reconnaissance de mots sur l'automate complementaire" << endl;
+    cout << "   - RecoComp [n]: Lance un test de reconnaissance de mots sur l'automate complementaire" << endl;
     cout << "   - TRaitements [n]: Lance les traitements suivant: AF -> AFDC -> AFDCM -> Acomp -> AcompStd" << endl;
     cout << "   - EstDeterministe [n]: Test si l'automate est deterministe" << endl;
     cout << "   - EstAsynchrone [n]: Test si l'automate est Asynchrone" << endl;
